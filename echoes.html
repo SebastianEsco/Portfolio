@@ -6,12 +6,22 @@
 -->
 <html>
 	<head>
-		<title>Generic - Spectral by HTML5 UP</title>
+		<title>Sebastián Escobar - Echoes</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
+
+	<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+		<div id="modal-content">
+			<button id="modal-close" aria-label="Close">&times;</button>
+			<img src="" alt="" id="modal-image" />
+			<div id="modal-title"></div>
+		</div>
+	</div>
+
 	<body class="is-preload">
 
 		<!-- Page Wrapper -->
@@ -51,8 +61,14 @@
 
 			<!-- Video Placeholder -->
 			<div class="video-container">
-				<!-- Replace this with embedded YouTube video or local video -->
-				<iframe width="100%" height="400" src="https://www.youtube.com/watch?v=M7wZSjVIdPE" title="Echoes of the Past Trailer" frameborder="0" allowfullscreen></iframe>
+				<iframe
+					width="100%" height="400"
+					src="https://www.youtube.com/embed/M7wZSjVIdPE"
+					title="Echoes of the Past Trailer"
+					frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+					allowfullscreen>
+				</iframe>
 			</div>
 
 			<h4>About the project</h4>
@@ -77,12 +93,40 @@
 			</p>
 
 			<!-- Optional additional media block -->
-			<div class="gallery">
-				<!-- Replace with image thumbnails and links -->
-				<img src="images/EchoesGalery1.jpg" alt="Gameplay Screenshot 1" />
-				<img src="images/EchoesGalery2.jpg" alt="Gameplay Screenshot 2" />
-				<img src="images/EchoesGalery3.jpg" alt="Gameplay Screenshot 3" />
+			<div class="carousel-wrapper">
+				<div class="carousel-container">
+					<button class="carousel-btn left">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+							<polyline points="15 18 9 12 15 6" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</button>
+					<div class="carousel">
+						<div class="carousel-track">
+							<button class="carousel-item" data-title="Screenshot 1" aria-label="Open Screenshot 1">
+								<img src="images/EchoesGalery1.jpg" alt="Screenshot 1" />
+							</button>
+							<button class="carousel-item" data-title="Screenshot 2" aria-label="Open Screenshot 2">
+								<img src="images/EchoesGalery2.jpg" alt="Screenshot 2" />
+							</button>
+							<button class="carousel-item" data-title="Screenshot 3" aria-label="Open Screenshot 3">
+								<img src="images/EchoesGalery3.jpg" alt="Screenshot 3" />
+							</button>
+							<button class="carousel-item" data-title="Screenshot 4" aria-label="Open Screenshot 4">
+								<img src="images/EchoesGalery4.jpg" alt="Screenshot 4" />
+							</button>
+							<button class="carousel-item" data-title="Screenshot 5" aria-label="Open Screenshot 5">
+								<img src="images/EchoesGalery5.jpg" alt="Screenshot 5" />
+							</button>
+						</div>
+					</div>
+					<button class="carousel-btn right">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+							<polyline points="9 18 15 12 9 6" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</button>
+				</div>
 			</div>
+
 
 			<h4>What I took away from this project</h4>
 			<p>
@@ -112,6 +156,96 @@
 					</footer>
 
 			</div>
+
+			<script>
+				const track = document.querySelector('.carousel-track');
+				const btnLeft = document.querySelector('.carousel-btn.left');
+				const btnRight = document.querySelector('.carousel-btn.right');
+				const images = Array.from(track.querySelectorAll('.carousel-item'));
+
+				let currentIndex = 0;
+
+				function updateCarousel() {
+					const slideWidth = images[0].getBoundingClientRect().width + 16; // ancho + margen
+					const visibleSlides = Math.floor(track.parentElement.offsetWidth / slideWidth);
+					const maxIndex = images.length - visibleSlides;
+
+					// Asegura que currentIndex esté en rango
+					currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
+
+					// Mover carrusel
+					const offset = currentIndex * slideWidth;
+					track.style.transform = `translateX(-${offset}px)`;
+
+					// Mostrar u ocultar flechas
+					btnLeft.classList.toggle('hidden', currentIndex === 0);
+					btnRight.classList.toggle('hidden', currentIndex >= maxIndex);
+				}
+
+				btnRight.addEventListener('click', () => {
+					currentIndex++;
+					updateCarousel();
+				});
+
+				btnLeft.addEventListener('click', () => {
+					currentIndex--;
+					updateCarousel();
+				});
+
+				window.addEventListener('resize', updateCarousel);
+				window.addEventListener('load', updateCarousel);
+
+
+				
+				document.querySelectorAll('.carousel-item').forEach(item => {
+				item.addEventListener('click', () => {
+					const img = item.querySelector('img');
+					const src = img.src;
+					const alt = img.alt;
+					const title = item.dataset.title || alt || '';
+
+					const modalOverlay = document.getElementById('modal-overlay');
+					const modalImage = document.getElementById('modal-image');
+					const modalTitle = document.getElementById('modal-title');
+
+					modalImage.src = src;
+					modalImage.alt = alt;
+					modalTitle.textContent = title;
+
+					modalOverlay.style.display = 'flex';
+
+					// Opcional: bloquear scroll del body mientras modal está abierto
+					document.body.style.overflow = 'hidden';
+				});
+				});
+
+				document.getElementById('modal-close').addEventListener('click', () => {
+				const modalOverlay = document.getElementById('modal-overlay');
+				modalOverlay.style.display = 'none';
+				document.body.style.overflow = 'auto';
+				});
+
+				// Cerrar modal si hacen click afuera del contenido
+				document.getElementById('modal-overlay').addEventListener('click', (e) => {
+				if (e.target === e.currentTarget) {
+					e.currentTarget.style.display = 'none';
+					document.body.style.overflow = 'auto';
+				}
+				});
+
+				// Cerrar modal con tecla ESC
+				document.addEventListener('keydown', (e) => {
+				if (e.key === "Escape") {
+					const modalOverlay = document.getElementById('modal-overlay');
+					if (modalOverlay.style.display === 'flex') {
+					modalOverlay.style.display = 'none';
+					document.body.style.overflow = 'auto';
+					}
+				}
+				});
+
+			</script>
+
 
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>

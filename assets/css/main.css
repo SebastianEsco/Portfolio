@@ -228,19 +228,45 @@ input, select, textarea {
 
 #modal-close {
 	position: absolute;
-	top: 8px;
-	right: 8px;
-	background: transparent;
+	top: 32px;
+	right: 32px;
+	background: none;
 	border: none;
 	color: white;
-	font-size: 1.5rem;
+	font-size: 4rem;
 	cursor: pointer;
+	padding: 0;
+	line-height: 1;
+	width: auto;
+	height: auto;
+
+	outline: none;          /* evita borde por foco */
+	box-shadow: none;       /* elimina sombras internas */
+	appearance: none;       /* limpia estilo nativo en algunos navegadores */
 }
 
 #modal-close:hover,
 #modal-close:focus {
 	color: #f00;
 	outline: none;
+}
+
+/* Tablets */
+@media screen and (max-width: 980px) {
+	#modal-close {
+		font-size: 3rem;
+		top: 24px;
+		right: 24px;
+	}
+}
+
+/* Móviles */
+@media screen and (max-width: 600px) {
+	#modal-close {
+		font-size: 2rem;
+		top: 16px;
+		right: 16px;
+	}
 }
 
 /* FIN CARRUSEL + MODAL */
@@ -2877,6 +2903,11 @@ input, select, textarea {
 
 /* Spotlight */
 
+
+	.spotlight.alt {
+		flex-direction: row-reverse;
+	}
+
 	.spotlight {
 		-moz-align-items: center;
 		-webkit-align-items: center;
@@ -2886,7 +2917,13 @@ input, select, textarea {
 		display: -webkit-flex;
 		display: -ms-flex;
 		display: flex;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		border-bottom: none;
+		margin-bottom: -1px;
 	}
+		
 
 		.spotlight .image {
 			-moz-order: 1;
@@ -2895,11 +2932,21 @@ input, select, textarea {
 			order: 1;
 			border-radius: 0;
 			width: 40%;
+			height: 100%;
 		}
 
 			.spotlight .image img {
-				border-radius: 0;
+				display: block;
 				width: 100%;
+				height: auto;
+				line-height: 0;
+				border: 0;
+				margin: 0;
+				padding: 0;
+				display: block;
+				width: 100%;
+				height: 100%;
+				object-fit: cover; /* importante */
 			}
 
 		.spotlight .content {
@@ -3006,25 +3053,46 @@ input, select, textarea {
 
 /* Botoneras */ 
 
+.project-button,
+.spotlight {
+	background-color: inherit;
+}
+
+
 .project-button {
-  display: block;
-  position:relative;
-  overflow: hidden;
-  transition: transform 0.3s ease;
+	backface-visibility: hidden;
+	transform: translateZ(0);
+	will-change: transform;
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	position: relative;
+	overflow: hidden;
+	margin-bottom: -1px;
+	transition: transform 0.5s ease;
 }
 
 .project-button:hover {
-  transform: scale(1.02);
-  z-index: 1;
+	transform: scale(1.03);
+	z-index: 1;
 }
+
 .project-button:hover .image img {
-  transform: scale(1.05);
+	transform: scale(1.05);
 }
+
+.project-button .image img {
+	transition: transform 0.5s ease;
+}
+
+
+
 
 
 /* Wrapper */
 	.wrapper {
 		padding: 6em 0 4em 0 ;
+		
 	}
 
 		.wrapper > .inner {
@@ -3217,6 +3285,10 @@ input, select, textarea {
 
 		.wrapper.style2 {
 			background-color: #2e3842;
+		}
+
+		.wrapper.style2 p {
+			color: white
 		}
 
 		.wrapper.style3 {
@@ -4076,10 +4148,7 @@ input, select, textarea {
 
 	#main > header {
 		padding: 12em 0 10em 0 ;
-		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/banner.jpg");
-		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/banner.jpg");
-		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/banner.jpg");
-		background-image: linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/banner.jpg");
+		background-image: url(images/FondoLargoEchoes.jpg);
 		background-attachment: fixed;
 		background-position: center center;
 		background-repeat: no-repeat;
@@ -4147,13 +4216,13 @@ input, select, textarea {
 /* Footer */
 
 	#footer {
-		padding: 6em 0 4em 0 ;
+		padding: 3em 0 1em 0 ;
 		background-color: #1d242a;
 		text-align: center;
 	}
 
 		#footer .icons {
-			font-size: 1.25em;
+			font-size: 1.75em;
 		}
 
 			#footer .icons a {
@@ -4164,40 +4233,41 @@ input, select, textarea {
 					color: #fff;
 				}
 
-		#footer .copyright {
+		#footer .fotterplus {
+			text-align: center;
 			color: rgba(255, 255, 255, 0.5);
-			font-size: 0.8em;
+			font-size: 1em;
 			letter-spacing: 0.225em;
 			list-style: none;
 			padding: 0;
 			text-transform: uppercase;
 		}
 
-			#footer .copyright li {
+			#footer .fotterplus li {
 				border-left: solid 1px rgba(255, 255, 255, 0.5);
 				display: inline-block;
-				line-height: 1em;
+				line-height: 0.5em;
 				margin-left: 1em;
 				padding-left: 1em;
 			}
 
-				#footer .copyright li:first-child {
+				#footer .fotterplus li:first-child {
 					border-left: 0;
 					margin-left: 0;
 					padding-left: 0;
 				}
 
-				#footer .copyright li a {
+				#footer .fotterplus li a {
 					color: inherit;
 				}
 
-					#footer .copyright li a:hover {
+					#footer .fotterplus li a:hover {
 						color: #fff;
 					}
 
 				@media screen and (max-width: 480px) {
 
-					#footer .copyright li {
+					#footer .fotterplus li {
 						border: 0;
 						display: block;
 						line-height: 1.65em;

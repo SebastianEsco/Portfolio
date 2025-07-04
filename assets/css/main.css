@@ -3049,15 +3049,39 @@ input, select, textarea {
 
 		}
 
+#two .inner {
+	text-align: center;
+}
+
+#two .major {
+	margin-bottom: 1em !important;
+	padding-bottom: 0 !important;
+}
+
+#two .major h2 {
+	font-size: 2em;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	border: none !important;
+	margin-bottom: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+#two .major::before,
+#two .major::after,
+#two .major h2::before,
+#two .major h2::after,
+#two .major h2 span::before,
+#two .major h2 span::after {
+	content: none !important;
+	display: none !important;
+	background: none !important;
+	border: none !important;
+	height: 0 !important;
+}
 
 
 /* Botoneras */ 
-
-.project-button,
-.spotlight {
-	background-color: inherit;
-}
-
 
 .project-button {
 	backface-visibility: hidden;
@@ -3069,20 +3093,40 @@ input, select, textarea {
 	position: relative;
 	overflow: hidden;
 	margin-bottom: -1px;
-	transition: transform 0.5s ease;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	border-radius: 8px;
 }
 
 .project-button:hover {
 	transform: scale(1.03);
 	z-index: 1;
+	box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+	background-color: rgba(255, 255, 255, 0.05);
+	cursor: pointer;
 }
 
 .project-button:hover .image img {
 	transform: scale(1.05);
+	filter: brightness(1.05);
 }
 
 .project-button .image img {
-	transition: transform 0.5s ease;
+	transition: transform 0.3s ease, filter 0.3s ease;
+	border-radius: 8px;
+}
+
+
+.loop-video-container {
+	margin-top: 2em;
+	margin-bottom: 2em;
+	text-align: center;
+}
+
+.loop-video-container video {
+	width: 100%;
+	max-width: 800px;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -3287,8 +3331,12 @@ input, select, textarea {
 			background-color: #2e3842;
 		}
 
+		.spotlight.alt {
+		background-color: #262f37;
+		}
+
 		.wrapper.style2 p {
-			color: white
+			color: white;
 		}
 
 		.wrapper.style3 {
@@ -4146,6 +4194,19 @@ input, select, textarea {
 
 /* Main */
 
+/* KAPSULA */
+
+	body.kapsula-page #main > header {
+	padding: 12em 0 10em 0;
+	background-image: url(images/KapsulaBlur.jpg);
+	background-attachment: fixed;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	text-align: center;
+	color: white; /* si necesitas cambiar el color del texto */
+}
+
 	#main > header {
 		padding: 12em 0 10em 0 ;
 		background-image: url(images/FondoLargoEchoes.jpg);
@@ -4155,6 +4216,7 @@ input, select, textarea {
 		background-size: cover;
 		text-align: center;
 	}
+	
 
 		#main > header h2 {
 			font-size: 1.75em;

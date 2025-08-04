@@ -2847,7 +2847,7 @@ input, select, textarea {
 
 			.features li:before {
 				display: block;
-				color: #00ffcc;
+				color: #3b403f;
 				position: absolute;
 				left: 1.75em;
 				top: 2.75em;
@@ -2967,7 +2967,7 @@ input, select, textarea {
 		}
 
 		.spotlight:nth-child(1) {
-			background-color: rgba(0, 0, 0, 0.075);
+			background-color: rgba(33, 26, 26, 0.075);
 		}
 
 		.spotlight:nth-child(2) {
@@ -3127,6 +3127,27 @@ input, select, textarea {
 	max-width: 800px;
 	border-radius: 12px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.project-button .title-text {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.project-button .title-text::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: rgba(255,255,255,0.75);
+  transition: width 0.3s ease;
+}
+
+.project-button:hover .title-text::after {
+  width: 100%;
 }
 
 
@@ -3332,8 +3353,13 @@ input, select, textarea {
 		}
 
 		.spotlight.alt {
-		background-color: #262f37;
+		background-color: #2d2017;
 		}
+
+		/* Aplica solo a spotlight normales (como Entre Balcones), no los que tienen "alt" */
+	.spotlight:not(.alt) {
+	background: #24212c; /* Cambia a tu color deseado */
+	}
 
 		.wrapper.style2 p {
 			color: white;
@@ -4207,6 +4233,32 @@ input, select, textarea {
 	color: white; /* si necesitas cambiar el color del texto */
 }
 
+/* Nuclear */
+
+	body.kapsula-page #main > header {
+	padding: 12em 0 10em 0;
+	background-image: url(images/NuclearBlur.png);
+	background-attachment: fixed;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	text-align: center;
+	color: white; /* si necesitas cambiar el color del texto */
+}
+
+/* Balcones */
+
+	body.balcones-page #main > header {
+	padding: 12em 0 10em 0;
+	background-image: url(images/BalconesBlur.png);
+	background-attachment: fixed;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	text-align: center;
+	color: white; /* si necesitas cambiar el color del texto */
+}
+
 	#main > header {
 		padding: 12em 0 10em 0 ;
 		background-image: url(images/FondoLargoEchoes.jpg);
@@ -4369,6 +4421,9 @@ input, select, textarea {
     background-size: cover;
     padding-top: 0;
 }
+
+
+
 
 
 	

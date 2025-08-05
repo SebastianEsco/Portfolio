@@ -3195,7 +3195,7 @@ html, body {
 
 
 .seccion-sobremi {
-    background-color: #f0f0f0;
+    background: linear-gradient(to right, #1F1229, #feb47b);
     padding: 0;
     overflow: hidden;
 }
@@ -3229,7 +3229,7 @@ html, body {
     object-fit: cover;
     z-index: 15; /* <-- mayor que el texto */
     pointer-events: none; /* <- por si no quieres que interfiera con clics */
-    mix-blend-mode: multiply; /* <- opcional: para dar un efecto de fusión */
+    mix-blend-mode:overlay; /* <- opcional: para dar un efecto de fusión */
 }
 
 .parallax-imagen::before {
@@ -3465,12 +3465,12 @@ html, body {
 		}
 
 		.spotlight.alt {
-		background-color: #2d2017;
+		background-color: #130b19;
 		}
 
 		/* Aplica solo a spotlight normales (como Entre Balcones), no los que tienen "alt" */
 	.spotlight:not(.alt) {
-	background: #24212c; /* Cambia a tu color deseado */
+	background: #1F1229; /* Cambia a tu color deseado */
 	}
 
 		.wrapper.style2 p {

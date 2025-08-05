@@ -3195,7 +3195,7 @@ html, body {
 
 
 .seccion-sobremi {
-    background: linear-gradient(to right, #1F1229, #feb47b);
+    background-color: #ffffff;
     padding: 0;
     overflow: hidden;
 }
@@ -3229,7 +3229,7 @@ html, body {
     object-fit: cover;
     z-index: 15; /* <-- mayor que el texto */
     pointer-events: none; /* <- por si no quieres que interfiera con clics */
-    mix-blend-mode:overlay; /* <- opcional: para dar un efecto de fusión */
+    mix-blend-mode:multiply; /* <- opcional: para dar un efecto de fusión */
 }
 
 .parallax-imagen::before {
@@ -3250,8 +3250,8 @@ html, body {
 	padding-top: 5em; /* o menos, ajústalo a gusto */
     text-align: left;
     z-index: 10;
-    background-color: white;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+    background: linear-gradient(to left, #a463cc8e, #ffffff);
+    box-shadow: -10px 0 30px rgba(235, 235, 235, 0.05);
 }
 
 .texto-sobremi h2 {

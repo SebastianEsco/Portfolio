@@ -3195,7 +3195,7 @@ html, body {
 
 
 .seccion-sobremi {
-    background: linear-gradient(to right, #1F1229, #feb47b);
+    background: linear-gradient(to right, #1f1229, #feb47b);
     padding: 0;
     overflow: hidden;
 }
@@ -3229,7 +3229,7 @@ html, body {
     object-fit: cover;
     z-index: 15; /* <-- mayor que el texto */
     pointer-events: none; /* <- por si no quieres que interfiera con clics */
-    mix-blend-mode:overlay; /* <- opcional: para dar un efecto de fusión */
+    mix-blend-mode: luminosity; /* <- opcional: para dar un efecto de fusión */
 }
 
 .parallax-imagen::before {

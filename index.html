@@ -1,9 +1,5 @@
 <!DOCTYPE HTML>
-<!--
-	Spectral by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+
 <html>
 	<head>
 		<title>SebasEsco Portafolio</title>
@@ -11,70 +7,94 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	</head>
 
 
 	<link rel="preload" as="image" href="css/images/banner-frames/0001.jpg">
 	<link rel="preload" as="image" href="css/images/banner-frames/0002.jpg">
 
-	
+	<script>
+	window.addEventListener('scroll', () => {
+		const parallax = document.getElementById('parallax-foto');
+		const speed = 0.0002 * window.scrollY;
+		const scrollY = window.scrollY;
+		const threshold = 400; // comienza el efecto después de 100px
+
+		if (parallax) {
+			const offset = scrollY > threshold ? (scrollY - threshold) * speed : 0;
+			parallax.style.transform = `translateY(${offset}px)`;
+		}
+		});
+	</script>
+
 
 
 	<body class="landing is-preload">
 
-		<!-- Page Wrapper -->
-			<div id="page-wrapper">
+	<!-- Page Wrapper -->
+	<div id="page-wrapper">
 
-				<!-- Header -->
-					<header id="header" class="alt">
-						<h1><a href="index.html">Sebastián Escobar</a></h1>
-						<nav id="nav">
+		<!-- Header -->
+		<header id="header" class="alt">
+			<h1><a href="index.html">Sebastián Escobar</a></h1>
+			<nav id="nav">
+				<ul>
+					<li class="special">
+						<a href="#menu" class="menuToggle"><span>Menu</span></a>
+						<div id="menu">
 							<ul>
-								<li class="special">
-									<a href="#menu" class="menuToggle"><span>Menu</span></a>
-									<div id="menu">
-										<ul>
-											<li><a href="index.html">Home</a></li>
-											<li><a href="#two" class="scrolly">Portfolio</a></li>
-											<li><a href="#three" class="scrolly">Curriculum</a></li>
-										</ul>
-									</div>
-								</li>
-							</ul>
-						</nav>
-					</header>
-
-				<!-- Banner -->
-					<section id="banner">
-						<div class="inner">
-							<h2>Sebastián Escobar</h2>
-						</div>
-						<a href="#one" class="more scrolly">About me</a>
-					</section> 
-
-				<!-- One -->
-					<section id="one" class="wrapper style1 special">
-						<div class="inner">
-							<header class="major">
-								<h2>I'm Sebastián Escobar</h2>
-								<p>I'm a digital creator passionate about telling interactive stories through design, code, and imagination.
-									I specialize in developing video games and immersive experiences with Unity for PC, mobile devices, augmented reality (AR), and virtual reality (VR).
-									I love turning ideas into meaningful experiences that connect with people</p>
-							</header>
-							<ul class="icons major">
-								<li><span class="icon fa-gem major style1"><span class="label">Lorem</span></span></li>
-								<li><span class="icon fa-heart major style2"><span class="label">Ipsum</span></span></li>
-								<li><span class="icon solid fa-code major style3"><span class="label">Dolor</span></span></li>
+								<li><a href="index.html">Home</a></li>
+								<li><a href="#two" class="scrolly">Portfolio</a></li>
+								<li><a href="#three" class="scrolly">Curriculum</a></li>
 							</ul>
 						</div>
-					</section>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		<!-- Banner -->
+		<section id="banner">
+			<div class="inner">
+				<h2>Sebastián Escobar</h2>
+			</div>
+			<a href="#aboutme" class="more scrolly">About Me</a>
+		</section>
+
+		<!-- About Me Section with Parallax Effect -->
+		<section id="aboutme" class="seccion-sobremi">
+			<div class="contenedor-sobremi">
+
+				<!-- Parallax Image -->
+				<div class="parallax-imagen-container">
+					<img src="images/SebasFoto.png" id="parallax-foto" class="parallax-imagen" />
+				</div>
+
+				<!-- About Me Text -->
+				<div class="texto-sobremi">
+					<h2>About Me</h2>
+					<p>
+						I'm Sebastián Escobar, a digital creator focused on interactive storytelling. My journey began with a fascination for how technology can evoke emotion and spark curiosity.
+					</p>
+					<p>
+						I specialize in Unity development, building experiences for PC, mobile, virtual reality (VR), and augmented reality (AR). I'm driven by how design, code, and imagination come together to create meaningful interactions.
+					</p>
+					<p>
+						Beyond the technical, I'm deeply inspired by art, architecture, and the human stories behind technology.
+					</p>
+				</div>
+
+			</div>
+		</section>
+
+
 
 				<!-- Two -->
 					<section id="two" class="wrapper alt style2">
 					
 						<div class="inner">
 							<header class="major">
-								<h2>My Portfolio</h2>
 							</header>
 						</div>
 					<!-- Echoes of the Past: imagen izquierda -->
@@ -146,72 +166,71 @@
 					</a>
 
 				<!-- Resume: Sebastián Escobar Mejía -->
-				<section id="three" class="wrapper style3 special">
-					<div class="inner">
-						<header class="major">
-						<h2><strong>Sebastián Escobar Mejía</strong></h2>
-						<p><em>Digital Entertainment Design Engineering Student</em><br />
-						Focused on game development, interactive experiences, and 3D content creation.</p>
-						</header>
+		<section id="three" class="wrapper style3 special">
+			<div class="inner">
+				<header class="major">
+					<h2><strong>Sebastián Escobar Mejía</strong></h2>
+					<p><em>Digital Entertainment Design Engineering Student</em><br />
+					Focused on game development, interactive experiences, and 3D content creation.</p>
+				</header>
 
-						<ul class="features">
-							<li class="icon solid fa-laptop-code">
-								<h3>Technical Skills</h3>
-								<p><strong>Languages:</strong> C#, JavaScript, Python<br />
-								<strong>Tools:</strong> Unity, Blender, Adobe Substance Painter<br />
-								<strong>Others:</strong> Excel, Git, VR/AR development</p>
-							</li>
+				<ul class="features">
+					<li class="feature-item">
+						<i class="fas fa-laptop-code icon-top-right"></i>
+						<h3>Technical Skills</h3>
+						<p><strong>➤ Languages:</strong> C#, JavaScript, Python<br />
+						<strong>➤ Tools:</strong> Unity, Blender, Adobe Substance Painter<br />
+						<strong>➤ Others:</strong> Excel, Git, VR/AR development</p>
+					</li>
 
-							<li class="icon solid fa-project-diagram">
-								<h3>Featured Projects</h3>
-								<p><strong>Echoes of the Past:</strong> Best Game, Visual Excellence, and Narrative Impact Award.<br />
-								<strong>Entre Balcones:</strong> VR experience awarded with academic distinction.</p>
-							</li>
+					<li class="feature-item">
+						<i class="fas fa-project-diagram icon-top-right"></i>
+						<h3>Featured Projects</h3>
+						<p><strong>➤ Echoes of the Past:</strong> Best Game, Visual Excellence, and Narrative Impact Award.<br />
+						<strong>➤ Entre Balcones:</strong> VR experience awarded with academic distinction.</p>
+					</li>
 
-							<li class="icon solid fa-user-graduate">
-								<h3>Education</h3>
-								<p><strong>Pontifical Bolivarian University</strong><br />
-								B.Eng. in Digital Entertainment Design (8/8 semesters completed)</p>
-							</li>
+					<li class="feature-item">
+						<i class="fas fa-user-graduate icon-top-right"></i>
+						<h3>Education</h3>
+						<p><strong>Pontifical Bolivarian University</strong><br />
+						B.Eng. in Digital Entertainment Design (8/8 semesters completed)</p>
+					</li>
 
-							<li class="icon solid fa-people-arrows">
-								<h3>Collaborative Experience</h3>
-								<p>Member of a VR research group in collaboration with the Architecture and Design Faculty.<br />
-								Academic mentor and lab assistant in ICT experimentation labs for 3 semesters.</p>
-							</li>
+					<li class="feature-item">
+						<i class="fas fa-people-arrows icon-top-right"></i>
+						<h3>Experience & Collaboration</h3>
+						<p>➤ Member of the VR research group in collaboration with the Architecture and Design Faculty.<br />
+						➤ Academic mentor and lab assistant in ICT experimentation labs for 3 semesters.</p>
+					</li>
 
-							<li class="icon solid fa-language">
-								<h3>Languages</h3>
-								<p><strong>Spanish:</strong> Native<br />
-								<strong>English:</strong> Advanced (spoken, written, reading, and listening)</p>
-							</li>
+					<li class="feature-item">
+						<i class="fas fa-language icon-top-right"></i>
+						<h3>Languages</h3>
+						<p><strong>➤ Spanish:</strong> Native<br />
+						<strong>➤ English:</strong> Advanced (spoken, written, reading, and listening)</p>
+					</li>
 
-							<li class="icon solid fa-basketball-ball">
-								<h3>Activities & Interests</h3>
-								<p>Ultimate Frisbee (university team), chess, cinema, technology, and continuous learning.</p>
-							</li>
-						</ul>
+					<li class="feature-item">
+						<i class="fas fa-basketball-ball icon-top-right"></i>
+						<h3>Activities & Interests</h3>
+						<p>➤ Ultimate Frisbee (university team), chess, cinema, technology, and continuous learning.</p>
+					</li>
+				</ul>
 
-						<footer>
-						<p><strong>Contact:</strong> sebastian.escobarm1@gmail.com | +57 310 424 4649<br />
-						<strong>Address:</strong> Calle 75 AB Sur #52 D – 71, La Estrella, Antioquia, Colombia</p>
-						</footer>
-					</div>
-				</section>
+				<footer>
+					<p><strong>Contact:</strong> sebastian.escobarm1@gmail.com | +57 310 424 4649<br />
+					<strong>Address:</strong> Calle 75 AB Sur #52 D – 71, La Estrella, Antioquia, Colombia</p>
+				</footer>
 
-				<!-- CTA -->
-					<section id="cta" class="wrapper style4">
-						<div class="inner">
-							<header>
-								<h2>Arcue ut vel commodo</h2>
-								<p>Aliquam ut ex ut augue consectetur interdum endrerit imperdiet amet eleifend fringilla.</p>
-							</header>
-							<ul class="actions stacked">
-								<li><a href="#" class="button fit primary">Activate</a></li>
-								<li><a href="#" class="button fit">Learn More</a></li>
-							</ul>
-						</div>
-					</section>
+				<div style="text-align: center; margin-top: 2em;">
+				<a href="assets/docs/SebastianEscobar_CV.pdf" class="button primary icon solid fa-download" target="_blank" download>
+					Download Full Resume (PDF)
+				</a>
+			</div>
+
+			</div>
+		</section>
 
 				<!-- Footer -->
 				<footer id="footer">

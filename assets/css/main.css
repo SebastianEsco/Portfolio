@@ -271,6 +271,11 @@ input, select, textarea {
 
 /* FIN CARRUSEL + MODAL */
 
+html, body {
+  overflow-x: hidden;  /* oculta scroll lateral */
+  overflow-y: auto;    /* permite scroll vertical */
+}
+
 
 .video-container {
 	position: relative;
@@ -3185,6 +3190,113 @@ input, select, textarea {
 			padding: 0;
 		}
 
+
+/* Sección Sobre Mí */
+
+
+.seccion-sobremi {
+    background-color: #f0f0f0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.contenedor-sobremi {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 50vh;
+	position: relative; 
+}
+
+.parallax-imagen-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parallax-imagen {
+    position: absolute; /* <- nuevo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 15; /* <-- mayor que el texto */
+    pointer-events: none; /* <- por si no quieres que interfiera con clics */
+    mix-blend-mode: multiply; /* <- opcional: para dar un efecto de fusión */
+}
+
+.parallax-imagen::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0);
+    z-index: 2;
+}
+
+
+.texto-sobremi {
+    flex: 1;
+    padding: 4em 3em;
+    display: flex;
+    flex-direction: column;
+   justify-content: flex-start;
+	padding-top: 5em; /* o menos, ajústalo a gusto */
+    text-align: left;
+    z-index: 10;
+    background-color: white;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+}
+
+.texto-sobremi h2 {
+    font-size: 2.8em;
+    margin-bottom: 0.6em;
+    color: #111;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.texto-sobremi p {
+    font-size: 1.15em;
+    line-height: 1.8;
+    margin-bottom: 1.5em;
+    color: #333;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .contenedor-sobremi {
+        flex-direction: column;
+    }
+
+    .parallax-imagen-container {
+        height: 300px;
+        min-height: unset;
+    }
+
+    .parallax-imagen {
+        position: relative;
+        height: 100%;
+        transform: none !important;
+    }
+
+    .texto-sobremi {
+        padding: 2em 1.5em;
+    }
+}
+
+
+
+
+
+
 		.wrapper.style1 {
 			background: linear-gradient(0deg, #0a0f0f, #1e2928);
 			color: #c8ece9;
@@ -3422,26 +3534,77 @@ input, select, textarea {
 
 
 		#three .features li {
-		position: relative;
-		flex: 1 1 300px;
-		background: #2f2f46;
-		padding: 2em 1.5em 1.5em 1.5em;
-		border-radius: 12px;
-		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-		transition: transform 0.3s ease;
-		text-align: left;
-		}
+  position: relative;
+  flex: 1 1 300px;
+  background: #2f2f46;
+  padding: 2em 1.5em 1.5em 1.5em;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+  text-align: left;
+  overflow: hidden;
+}
 
-		#three .features li::before {
-		font-family: "Font Awesome 5 Free";
-		font-weight: 900;
-		content: attr(data-icon);
-		font-size: 2em;
-		color: #ffd369;
-		position: absolute;
-		top: 1em;
-		right: 1em;
-		}
+/* Ícono personalizado arriba a la derecha */
+#three .features li::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 1.8em;
+  color: #ffd369;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  pointer-events: none;
+}
+
+.feature-item {
+  position: relative;
+  flex: 1 1 300px;
+  background: #2f2f46;
+  padding: 2em 1.5em 1.5em 1.5em;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+  text-align: left;
+  overflow: hidden;
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+}
+
+.feature-item h3 {
+  color: #ffd369;
+  margin-bottom: 0.8em;
+  font-size: 1.4em;
+}
+
+.feature-item p {
+  font-size: 1em;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.icon-top-right {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  font-size: 1.8em;
+  color: #ffd369;
+}
+
+/* Mostrar íconos correctos según la clase */
+#three .features li.fa-laptop-code::before       { content: "\f5fc"; }
+#three .features li.fa-project-diagram::before   { content: "\f542"; }
+#three .features li.fa-user-graduate::before     { content: "\f501"; }
+#three .features li.fa-people-arrows::before     { content: "\f4c0"; }
+#three .features li.fa-language::before          { content: "\f1ab"; }
+#three .features li.fa-basketball-ball::before   { content: "\f434"; }
+
+/* Para evitar que el texto choque con el ícono */
+#three .features li {
+  padding-right: 3em; /* espacio para el ícono */
+}
 
 
 		.wrapper.style4 {

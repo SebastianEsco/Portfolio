@@ -7,6 +7,26 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
+/* Scrollbar vertical estilizado */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3); /* Color semitransparente */
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 html, body, div, span, applet, object,
 iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
 pre, a, abbr, acronym, address, big, cite,
@@ -3479,7 +3499,7 @@ html, body {
 
 		/* Mejora visual para la sección de la hoja de vida */
 		#three.wrapper.style3.special {
-		background: linear-gradient(to bottom right, #1e1e2f, #2a2a40);
+		background: linear-gradient(to bottom right, #321f41, #1F1229);
 		color: #ffffff;
 		padding: 4em 2em;
 		text-align: center;
@@ -3536,7 +3556,7 @@ html, body {
 		#three .features li {
   position: relative;
   flex: 1 1 300px;
-  background: #2f2f46;
+  background: #493658;
   padding: 2em 1.5em 1.5em 1.5em;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
@@ -3820,7 +3840,7 @@ html, body {
 		-ms-transition: -ms-transform 0.5s ease;
 		transition: transform 0.5s ease;
 		-webkit-overflow-scrolling: touch;
-		background: #2c3a39;
+		background: #321d42;
 		color: #ffffff;
 		height: 100%;
 		max-width: 80%;
@@ -3914,7 +3934,7 @@ html, body {
 		-webkit-transition: background-color 0.2s ease;
 		-ms-transition: background-color 0.2s ease;
 		transition: background-color 0.2s ease;
-		background: #2e3842;
+		background: #341e44;
 		height: 3em;
 		left: 0;
 		line-height: 3em;
@@ -4184,7 +4204,7 @@ html, body {
 			-ms-transition-delay: 1.25s;
 			transition-delay: 1.25s;
 			content: '';
-			background: #2e3842;
+			background: #1F1229;
 			display: block;
 			width: 100%;
 			height: 100%;
@@ -4410,11 +4430,14 @@ html, body {
 		background-attachment: scroll;
 	}
 
+
+
+
 /* Footer */
 
 	#footer {
 		padding: 3em 0 1em 0 ;
-		background-color: #1d242a;
+		background-color: #160d1d;
 		text-align: center;
 	}
 

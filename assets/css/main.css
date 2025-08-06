@@ -3123,19 +3123,24 @@ html, body {
 }
 
 .project-button:hover {
-	transform: scale(1.03);
+	transform: scale(1.05);
 	z-index: 1;
 	box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-	background-color: rgba(255, 255, 255, 0.05);
+	background-color: rgba(255, 247, 105, 0);
+	transition: transform 0.3s ease, filter 0.3s ease;
 	cursor: pointer;
 }
 
 .project-button:hover .image img {
-	transform: scale(1.05);
+	
 	filter: brightness(1.05);
+	transform: scale(1.05);
+	filter: brightness(1.05) grayscale(0%);
+	transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .project-button .image img {
+	filter: brightness(1.05) grayscale(100%);
 	transition: transform 0.3s ease, filter 0.3s ease;
 	border-radius: 8px;
 }
@@ -3269,7 +3274,7 @@ html, body {
    justify-content: flex-start;
 	padding-top: 5em; /* o menos, ajústalo a gusto */
     text-align: left;
-    z-index: 10;
+    z-index: 0;
     background-color: white;
     box-shadow: -10px 0 30px rgba(0,0,0,0.05);
 }
@@ -4436,7 +4441,7 @@ html, body {
 /* Footer */
 
 	#footer {
-		padding: 3em 0 1em 0 ;
+		padding: 2em 0 0.5em 0 ;
 		background-color: #160d1d;
 		text-align: center;
 	}

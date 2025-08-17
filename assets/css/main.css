@@ -151,12 +151,15 @@ input, select, textarea {
   object-fit: cover;
   display: block;
   pointer-events: none;
+  transform: scale(1);
+	transition: transform 0.5s ease;
 }
 
 /* Efecto hover/focus para indicar que se puede clickear */
 .carousel-item:hover img,
 .carousel-item:focus img {
-	transform: scale(1.05);
+	transform: scale(1.115);
+	transition: transform 0.5s ease;
 	box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
 	outline: none;
 }
@@ -187,7 +190,9 @@ input, select, textarea {
 
 .carousel-btn:hover svg {
 	stroke: #000;
-	transform: scale(1.1);
+	transform: scale(1.5);
+	transition: transform 0.3s ease;
+	
 }
 
 .carousel-btn:active svg {

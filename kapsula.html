@@ -7,6 +7,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script type="importmap">
+		{
+			"imports": {
+			"three": "https://unpkg.com/three@v0.163.0/build/three.module.js",
+			"three/addons/": "https://unpkg.com/three@v0.163.0/examples/jsm/"
+			}
+		}
+		</script>
 	</head>
 
 	
@@ -69,7 +77,6 @@
 			<p>
 				Kapsula 12 is a visually rich interactive visualization built in Unity HDRP, designed with a realistic yet stylized aesthetic. The project leverages the power of HDRP to deliver high-quality materials and shaders that enhance clarity and understanding of the capsule’s structure, while maintaining interactivity and smooth performance. Post-processing is present but subtle, with the main visual focus on custom shaders crafted to support informative and intuitive exploration.
 			</p>
-			<!-- Aquí -->
 			 <div class="loop-video-container">
 				<video autoplay loop muted playsinline>
 					<source src="images/Despiece.mp4" type="video/mp4">
@@ -79,6 +86,7 @@
 			<p>
 				Users navigate the capsule by interacting with UI elements or directly manipulating camera points of interest, enabling three distinct exploratory journeys through the exterior, interior, and individual components. Although primarily a technical visualization, the experience includes contextual narrative elements to engage the user.
 			<p>
+				<div id="model-wrapper"></div>
 				Developed in about one month as part of a visualization and information design course, the team faced the challenge of balancing advanced visual tools with fluid interactivity. Through this project, I honed skills in writing clean, organized code with well-managed state machines and efficient use of Unity Events to facilitate scalable, maintainable systems. This approach was essential to ensuring seamless integration of complex visual features without compromising performance or usability.
 			</p>
 
@@ -244,6 +252,7 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script type="module" src="./3dmodel2.js"></script>
 
 	</body>
 </html>

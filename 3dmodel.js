@@ -26,7 +26,7 @@ let hintShown = true;         // bandera para mostrar la pista
 
 // Crear un "hint" (mensaje flotante)
 const hint = document.createElement('div');
-hint.innerText = "Arrastra para girar el objeto";
+hint.innerText = "Hold and drag to move the object";
 hint.style.position = "absolute";
 hint.style.bottom = "15px";
 hint.style.left = "50%";
@@ -90,7 +90,7 @@ let model = null; // variable donde guardaremos el modelo
 let idleTimeout;
 const IDLE_DELAY = 3000;     // ms antes de volver a estado inicial
 let restoring = false;       // bandera: ¿estamos restaurando?
-const EASE = 0.08;           // factor de suavizado por frame
+const EASE = 0.033;           // factor de suavizado por frame
 const EPS = 0.001;           // umbral para “considerar igual”
 
 // Guardaremos la rotación inicial REAL del modelo (cuando cargue)

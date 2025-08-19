@@ -4436,7 +4436,7 @@ html, body {
 
 /* Nuclear */
 
-	body.kapsula-page #main > header {
+	body.Nuclear-page #main > header {
 	padding: 12em 0 10em 0;
 	background-image: url(images/NuclearBlur.png);
 	background-attachment: fixed;

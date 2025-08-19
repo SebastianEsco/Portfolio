@@ -3360,6 +3360,56 @@ html, body {
     }
 }
 
+.resume-buttons {
+    display: flex;
+    gap: 10px; /* espacio entre botones */
+    flex-wrap: wrap; /* se acomoda en pantallas pequeñas */
+}
+
+.lang-selector {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0; /* Añadido margen superior */
+    justify-content: flex-start;
+}
+
+.lang-selector li {
+    margin-left: 10px;
+}
+
+.lang-selector button {
+    background: none;
+    border: 1px solid #333;
+    padding: 5px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* Estilo para botones inactivos (hover) */
+.lang-selector button:not(.active):hover {
+    background: #333;
+    color: white;
+}
+
+/* Estilo para botón activo (por defecto inglés) */
+.lang-selector button.active {
+    background: #333;
+    color: white;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); /* Efecto "oprimido" */
+    transform: translateY(1px); /* Pequeño desplazamiento para efecto de presión */
+}
+
+.lang-selector {
+    transition: opacity 0.3s ease;
+}
+
+.lang-selector.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
 
 
 

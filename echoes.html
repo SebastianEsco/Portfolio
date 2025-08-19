@@ -7,17 +7,28 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+		<script type="importmap">
+		{
+			"imports": {
+			"three": "https://unpkg.com/three@v0.163.0/build/three.module.js",
+			"three/addons/": "https://unpkg.com/three@v0.163.0/examples/jsm/"
+			}
+		}
+		</script>
 	</head>
 
-	<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-		<div id="modal-content">
-			<button id="modal-close" aria-label="Close">&times;</button>
-			<img src="" alt="" id="modal-image" />
-			<div id="modal-title"></div>
-		</div>
-	</div>
+	
 
 	<body class="is-preload">
+
+		<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+			<div id="modal-content">
+				<button id="modal-close" aria-label="Close">&times;</button>
+				<img src="" alt="" id="modal-image" />
+				<div id="modal-title"></div>
+			</div>
+		</div>
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
@@ -71,6 +82,13 @@
 			<p>
 				Players encounter musical, visual, logic, and spatial puzzles, all integrated into the environment through exploration. The story is non-linear and revealed through cinematic moments, audio triggers, and object interactions, creating a layered narrative experience.
 			</p>
+			
+			<div id="model-wrapper">
+			<p>
+				3D model, texture and in-game implementation by me.
+			</p>
+
+			</div>
 			<p>
 				The development process lasted 4 months, from concept to final build. The team used weekly Scrum-based sprints to stay organized and focused. The biggest challenge was achieving a high-quality visual finish while maintaining optimal performance with real-time lighting, high-resolution textures, post-processing, and detailed 3D models. We invested time learning and applying techniques like GPU instancing, occlusion culling, and efficient scene management to ensure a smooth experience.
 			</p>
@@ -253,6 +271,7 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script type="module" src="./3dmodel.js"></script>
 
 	</body>
 </html>

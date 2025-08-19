@@ -1,11 +1,6 @@
 @import url(fontawesome-all.min.css);
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic");
 
-/*
-	Spectral by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
 
 /* Scrollbar vertical estilizado */
 body::-webkit-scrollbar {
@@ -51,6 +46,48 @@ footer, header, hgroup, menu, nav, section {
 
 body {
 	line-height: 1;
+}
+
+#model-wrapper {
+  width: 60%;
+  height: 400px;
+  margin: 20px auto;
+}
+#model-wrapper canvas {
+  display:contents;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+/* Cuando el mouse está presionado (arrastrando) */
+#model-wrapper canvas:active {
+  cursor: grabbing;
+}
+
+
+#model-wrapper p {
+  font-size: 12px;        /* texto chiquito */
+  color: rgba(0, 0, 0, 0.6); /* medio transparente */
+  text-align: center;     /* opcional: centrar */
+  margin-top: 0px;       /* espacio desde el canvas */
+  cursor: text;           /* indica que se puede editar */
+}
+
+@media (max-width: 768px) {
+  #model-wrapper {
+    display: none;
+  }
+}
+
+#progress-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 999;
 }
 
 .project-sub {
@@ -151,12 +188,15 @@ input, select, textarea {
   object-fit: cover;
   display: block;
   pointer-events: none;
+  transform: scale(1);
+	transition: transform 0.5s ease;
 }
 
 /* Efecto hover/focus para indicar que se puede clickear */
 .carousel-item:hover img,
 .carousel-item:focus img {
-	transform: scale(1.05);
+	transform: scale(1.115);
+	transition: transform 0.5s ease;
 	box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
 	outline: none;
 }
@@ -187,7 +227,9 @@ input, select, textarea {
 
 .carousel-btn:hover svg {
 	stroke: #000;
-	transform: scale(1.1);
+	transform: scale(1.5);
+	transition: transform 0.3s ease;
+	
 }
 
 .carousel-btn:active svg {
@@ -334,6 +376,7 @@ html, body {
 
 .gallery img:hover {
 	transform: scale(1.05);
+	transition: transform 0.3s ease;
 }
 
 	@-ms-viewport {

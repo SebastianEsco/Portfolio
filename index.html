@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>SebasEsco Portafolio</title>
+		<title>Sebastián Escobar - Portfolio</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -266,22 +266,41 @@
 				const totalFrames = 47;
 				const framePath = i => `assets/css/images/banner-frames/${String(i).padStart(4, '0')}.jpg`;
 
-				// Precarga
+				let allLoaded = false;
+				let loadedCount = 0;
+
+				// Precarga de imágenes
 				const images = [];
-				for(let i = 1; i <= totalFrames; i++) {
-				images[i] = new Image();
-				images[i].src = framePath(i);
+				for (let i = 1; i <= totalFrames; i++) {
+					images[i] = new Image();
+					images[i].src = framePath(i);
+
+					// Contar carga
+					images[i].onload = () => {
+						loadedCount++;
+						// Cuando cargue la primera imagen, mostrarla
+						if (loadedCount === 1) {
+							banner.style.backgroundImage = `url('${framePath(1)}')`;
+						}
+						// Cuando todas estén cargadas, activar animación
+						if (loadedCount === totalFrames) {
+							allLoaded = true;
+						}
+					};
 				}
 
+				// Animación solo cuando ya estén todos cargados
 				window.addEventListener('scroll', () => {
-				const scrollTop = window.scrollY;
-				const maxScroll = window.innerHeight * 1;
-				const progress = Math.min(scrollTop / maxScroll, 1);
-				const frame = Math.floor(progress * (totalFrames - 1)) + 1;
-				banner.style.backgroundImage = `url('${framePath(frame)}')`;
-				});
+					if (!allLoaded) return; // Si aún no han cargado todas, no hacer nada
 
+					const scrollTop = window.scrollY;
+					const maxScroll = window.innerHeight * 1;
+					const progress = Math.min(scrollTop / maxScroll, 1);
+					const frame = Math.floor(progress * (totalFrames - 1)) + 1;
+					banner.style.backgroundImage = `url('${framePath(frame)}')`;
+				});
 			</script>
+
 
 	</body>
 </html>

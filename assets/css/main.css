@@ -3259,6 +3259,45 @@ html, body {
 		}
 
 
+/* Back button */
+.back-button-wrapper {
+  display: flex;          
+  justify-content: center;   
+  align-items: center;      
+  margin: 1rem 0; 
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1rem;
+  background: transparent; /* sin fondo */
+  color: #fff; /* texto e ícono blanco */
+  border: 2px solid #fff;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button i {
+  font-size: 1.1rem;
+  color: inherit; /* hereda el color del botón */
+}
+
+.back-button:hover {
+  color: #333; /* gris oscuro en hover */
+  border-color: #333;
+  background: #fff; /* opcional: si quieres que el fondo se rellene */
+  transform: scale(1.15);
+}
+
+.back-button:active {
+  transform: scale(0.875);
+}
+
+
 /* Sección Sobre Mí */
 
 

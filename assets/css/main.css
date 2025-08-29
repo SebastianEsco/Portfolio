@@ -2801,7 +2801,9 @@ html, body {
 			background-color: #ed4933;
 			box-shadow: none !important;
 			color: #ffffff !important;
+			transition: ease 0.5s;
 		}
+
 
 			input[type="submit"].primary:hover,
 			input[type="reset"].primary:hover,
@@ -2809,6 +2811,7 @@ html, body {
 			button.primary:hover,
 			.button.primary:hover {
 				background-color: #ef5e4a !important;
+				transform: scale(1.01) translate(0,-0.15em);
 			}
 
 			input[type="submit"].primary:active,
@@ -3302,9 +3305,23 @@ html, body {
 
 
 .seccion-sobremi {
-    background: linear-gradient(to right, #1f1229, #feb47b);
-    padding: 0;
-    overflow: hidden;
+  background: linear-gradient(270deg, #1f1229, #feb47b, #1f1229);
+  background-size: 600% 600%;  /* tamaño grande para que pueda moverse */
+  animation: gradientMove 40s ease infinite;
+  padding: 0;
+  overflow: hidden;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .contenedor-sobremi {
@@ -3328,16 +3345,18 @@ html, body {
 }
 
 .parallax-imagen {
-    position: absolute; /* <- nuevo */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 15; /* <-- mayor que el texto */
-    pointer-events: none; /* <- por si no quieres que interfiera con clics */
-    mix-blend-mode: luminosity; /* <- opcional: para dar un efecto de fusión */
+    z-index: 150; 
+    mix-blend-mode: luminosity; 
+	transition: cubic-bezier(0.165, 0.84, 0.44, 1);
 }
+
+
 
 .parallax-imagen::before {
     content: '';

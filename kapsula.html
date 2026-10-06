@@ -86,7 +86,7 @@
 			<p>
 				Users navigate the capsule by interacting with UI elements or directly manipulating camera points of interest, enabling three distinct exploratory journeys through the exterior, interior, and individual components. Although primarily a technical visualization, the experience includes contextual narrative elements to engage the user.
 			<p>
-				<div id="model-wrapper">
+				<div id="model-wrapper" data-model="model/Kapsula.glb" data-camera-z="0.7" data-min-zoom="0.6" data-max-zoom="1.1" data-ease="0.033" data-hint="Hold and drag to move the object">
 					<p>
 						3D model, texture and in-game implementation by me.
 					</p>
@@ -166,94 +166,7 @@
 					
 				</footer>
 
-			<script>
-				const track = document.querySelector('.carousel-track');
-				const btnLeft = document.querySelector('.carousel-btn.left');
-				const btnRight = document.querySelector('.carousel-btn.right');
-				const images = Array.from(track.querySelectorAll('.carousel-item'));
-
-				let currentIndex = 0;
-
-				function updateCarousel() {
-					const slideWidth = images[0].getBoundingClientRect().width + 16; // ancho + margen
-					const visibleSlides = Math.floor(track.parentElement.offsetWidth / slideWidth);
-					const maxIndex = images.length - visibleSlides;
-
-					// Asegura que currentIndex esté en rango
-					currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
-
-					// Mover carrusel
-					const offset = currentIndex * slideWidth;
-					track.style.transform = `translateX(-${offset}px)`;
-
-					// Mostrar u ocultar flechas
-					btnLeft.classList.toggle('hidden', currentIndex === 0);
-					btnRight.classList.toggle('hidden', currentIndex >= maxIndex);
-				}
-
-				btnRight.addEventListener('click', () => {
-					currentIndex++;
-					updateCarousel();
-				});
-
-				btnLeft.addEventListener('click', () => {
-					currentIndex--;
-					updateCarousel();
-				});
-
-				window.addEventListener('resize', updateCarousel);
-				window.addEventListener('load', updateCarousel);
-
-
-				
-				document.querySelectorAll('.carousel-item').forEach(item => {
-				item.addEventListener('click', () => {
-					const img = item.querySelector('img');
-					const src = img.src;
-					const alt = img.alt;
-					const title = item.dataset.title || alt || '';
-
-					const modalOverlay = document.getElementById('modal-overlay');
-					const modalImage = document.getElementById('modal-image');
-					const modalTitle = document.getElementById('modal-title');
-
-					modalImage.src = src;
-					modalImage.alt = alt;
-					modalTitle.textContent = title;
-
-					modalOverlay.style.display = 'flex';
-
-					// Opcional: bloquear scroll del body mientras modal está abierto
-					document.body.style.overflow = 'hidden';
-					});
-				});
-
-				document.getElementById('modal-close').addEventListener('click', () => {
-				const modalOverlay = document.getElementById('modal-overlay');
-				modalOverlay.style.display = 'none';
-				document.body.style.overflow = 'auto';
-				});
-
-				// Cerrar modal si hacen click afuera del contenido
-				document.getElementById('modal-overlay').addEventListener('click', (e) => {
-				if (e.target === e.currentTarget) {
-					e.currentTarget.style.display = 'none';
-					document.body.style.overflow = 'auto';
-				}
-				});
-
-				// Cerrar modal con tecla ESC
-				document.addEventListener('keydown', (e) => {
-				if (e.key === "Escape") {
-					const modalOverlay = document.getElementById('modal-overlay');
-					if (modalOverlay.style.display === 'flex') {
-					modalOverlay.style.display = 'none';
-					document.body.style.overflow = 'auto';
-					}
-				}
-				});
-
-			</script>
+			
 
 
 		<!-- Scripts -->
@@ -264,7 +177,9 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<script type="module" src="./3dmodel2.js"></script>
+			
 
+				<script src="assets/js/gallery-modal.js"></script>
+			<script type="module" src="assets/js/model-viewer.js"></script>
 	</body>
 </html>

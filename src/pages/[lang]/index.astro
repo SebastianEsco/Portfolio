@@ -1,0 +1,49 @@
+---
+import { langs } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import HeroFrames from '../../components/HeroFrames.astro';
+import BentoGrid from '../../components/BentoGrid.astro';
+import Experience from '../../components/Experience.astro';
+import Skills from '../../components/Skills.astro';
+import Contact from '../../components/Contact.astro';
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang } }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={t('meta.title')} description={t('meta.description')}>
+  <HeroFrames />
+
+  <section id="about" class="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+      <div class="md:col-span-4">
+        <!-- Placeholder for photo -->
+        <div class="aspect-[3/4] bg-olive-700/50 rounded-lg overflow-hidden border border-olive-700">
+          <img src="/Portfolio/assets/SebasFoto.png" alt={t('about.photoAlt')} class="w-full h-full object-cover mix-blend-luminosity opacity-80" />
+        </div>
+      </div>
+      <div class="md:col-span-8">
+        <h2 class="font-mono text-moss-500 uppercase tracking-widest text-sm mb-4">{t('about.label')}</h2>
+        <h3 class="font-display text-4xl md:text-5xl lg:text-6xl text-cream-100 mb-8 leading-tight">
+          {t('about.title')}
+        </h3>
+        <div class="space-y-6 text-cream-300 font-sans text-lg max-w-2xl leading-relaxed">
+          <p>{t('about.p1')}</p>
+          <p>{t('about.p2')}</p>
+          <p>{t('about.p3')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <BentoGrid />
+  <Experience />
+  <Skills />
+  <Contact />
+  
+</BaseLayout>

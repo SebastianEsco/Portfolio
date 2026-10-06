@@ -1,0 +1,36 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<section id="contact" class="py-32 px-6 md:px-12 bg-forest-900 mt-24 text-center">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="font-mono text-moss-500 uppercase tracking-widest text-sm mb-6">{t('contact.label')}</h2>
+    <h3 class="font-display text-5xl md:text-7xl text-cream-100 mb-8">{t('contact.title')}</h3>
+    <p class="font-sans text-xl text-cream-300 mb-12 max-w-xl mx-auto">
+      {t('contact.text')}
+    </p>
+    
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+      <a 
+        href="mailto:s.escobarmejia@gmail.com" 
+        class="inline-flex items-center justify-center px-8 py-4 bg-brass-400 text-forest-950 font-sans font-semibold rounded-full hover:bg-cream-100 transition-colors w-full sm:w-auto"
+      >
+        E-mail me
+      </a>
+      
+      <a 
+        href={lang === 'es' ? '/Portfolio/cv/SebastianEscobar_CV_ES.pdf' : '/Portfolio/cv/SebastianEscobar_CV_EN.pdf'}
+        target="_blank"
+        class="inline-flex items-center justify-center px-8 py-4 bg-transparent border border-olive-700 text-cream-100 font-sans font-medium rounded-full hover:border-moss-500 hover:text-white transition-colors w-full sm:w-auto"
+      >
+        <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        {lang === 'es' ? t('contact.cvEs') : t('contact.cvEn')}
+      </a>
+    </div>
+  </div>
+</section>

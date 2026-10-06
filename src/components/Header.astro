@@ -1,0 +1,35 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { homeUrl, asset } from '../i18n/paths';
+import { languages } from '../i18n/ui';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const otherLang = Object.keys(languages).find(l => l !== lang) as keyof typeof languages;
+const otherLangCode = otherLang.toUpperCase();
+---
+
+<header class="fixed top-0 left-0 w-full z-50 py-6 px-6 md:px-12 flex justify-between items-center mix-blend-difference text-cream-100">
+  <div class="flex items-center gap-4">
+    <a href={homeUrl(lang)} class="font-display text-xl font-medium tracking-wide">
+      Sebastián Escobar
+    </a>
+  </div>
+  
+  <nav class="hidden md:flex items-center gap-8 font-sans text-sm uppercase tracking-widest text-cream-300">
+    <a href={homeUrl(lang, '#work')} class="hover:text-cream-100 transition-colors">{t('nav.work')}</a>
+    <a href={homeUrl(lang, '#experience')} class="hover:text-cream-100 transition-colors">{t('nav.experience')}</a>
+    <a href={homeUrl(lang, '#contact')} class="hover:text-cream-100 transition-colors">{t('nav.contact')}</a>
+    
+    <div class="h-4 w-px bg-olive-700 mx-2"></div>
+    
+    <a href={homeUrl(otherLang)} class="hover:text-cream-100 transition-colors font-medium">
+      {otherLangCode}
+    </a>
+  </nav>
+
+  <button class="md:hidden text-sm uppercase tracking-widest">
+    {t('nav.menu')}
+  </button>
+</header>

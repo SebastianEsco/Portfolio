@@ -1,4 +1,18 @@
-@import url(fontawesome-all.min.css);
+/* ==========================================================================
+   SEBASTIÁN ESCOBAR PORTFOLIO - MAIN STYLESHEET
+   ==========================================================================
+   1. Reset & Global Styles
+   2. Typography & Fonts
+   3. Header & Navigation Drawer (#header, #nav, #menu)
+   4. Banner & Scroll Frame Animation (#banner)
+   5. About Me & Parallax Section (#aboutme, .seccion-sobremi)
+   6. Portfolio Spotlights & Grid (#two, .spotlight, .project-button)
+   7. Curriculum Vitae & Features (#three, .features)
+   8. Footer & Social Links (#footer)
+   9. Project Detail Pages (Echoes, Kapsula, Entre Balcones, Nuclear)
+   10. Interactive Components (Gallery Carousel, Lightbox Modal, 3D Canvas)
+   ========================================================================== */
+
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic");
 
 
@@ -4672,11 +4686,7 @@ html, body {
 /* Landing */
 
 	body.landing #page-wrapper {
-    background-image: -moz-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/Ramen.png");
-    background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/Ramen.png");
-    background-image: -ms-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/Ramen.png");
-    background-image: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/Ramen.png");
-
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.8));
     background-attachment: fixed;
     background-position: center center;
     background-repeat: no-repeat;

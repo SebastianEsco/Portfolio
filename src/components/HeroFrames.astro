@@ -1,0 +1,20 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<section class="relative h-[200vh]">
+  <!-- We'll implement the canvas scrubber here later -->
+  <div class="sticky top-0 h-screen flex flex-col justify-center items-center">
+    <div class="relative z-10 text-center">
+      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-cream-100 mb-4 drop-shadow-lg">
+        Sebastián Escobar
+      </h1>
+      <p class="font-mono text-moss-500 uppercase tracking-widest text-sm md:text-base drop-shadow-md">
+        {t('hero.role')} · {t('hero.location')}
+      </p>
+    </div>
+  </div>
+</section>

@@ -5,38 +5,299 @@ interface Props {
   hint?: string;
 }
 
-const { modelPath, caption, hint = "Drag to rotate · Scroll to zoom" } = Astro.props;
+const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" } = Astro.props;
 ---
 
-<div class="my-16">
-  <div class="relative w-full h-[450px] md:h-[550px] bg-forest-900 rounded-2xl border border-olive-700/60 overflow-hidden shadow-2xl flex items-center justify-center">
-    <!-- Google model-viewer web component -->
-    <model-viewer
-      src={modelPath}
-      alt="3D Model Viewer"
-      auto-rotate
-      camera-controls
-      touch-action="pan-y"
-      shadow-intensity="1.5"
-      exposure="1"
-      class="w-full h-full bg-transparent"
-    >
-      <div slot="poster" class="w-full h-full flex items-center justify-center text-moss-500 font-mono text-sm animate-pulse">
-        Loading 3D Model...
-      </div>
-    </model-viewer>
+<div class="my-20">
+  <div 
+    class="model-viewer-container relative w-full h-[460px] md:h-[580px] bg-gradient-to-b from-forest-900 to-forest-950 rounded-2xl border border-olive-700/60 overflow-hidden shadow-2xl select-none cursor-grab active:cursor-grabbing"
+    data-model={modelPath}
+    data-hint={hint}
+  >
+    <!-- Subtle radial spotlight backdrop behind 3D model -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(251,146,60,0.08),transparent_70%)] pointer-events-none"></div>
 
-    <!-- Floating user hint badge -->
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-forest-950/80 border border-olive-700/60 backdrop-blur-md text-xs font-mono text-cream-300 pointer-events-none tracking-wider shadow-lg">
-      ✦ {hint}
+    <!-- Canvas will be injected here -->
+    <div class="canvas-mount w-full h-full relative z-10"></div>
+
+    <!-- Loading progress spinner -->
+    <div class="model-loader absolute inset-0 z-20 flex flex-col items-center justify-center bg-forest-950/80 backdrop-blur-sm gap-3 transition-opacity duration-500">
+      <div class="w-8 h-8 rounded-full border-2 border-olive-700 border-t-accent-400 animate-spin"></div>
+      <span class="font-mono text-xs text-moss-500 uppercase tracking-widest load-text">Cargando modelo 3D...</span>
+    </div>
+
+    <!-- Floating interaction badge -->
+    <div class="interaction-hint absolute bottom-4 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-forest-950/85 border border-olive-700/60 backdrop-blur-md text-xs font-mono text-cream-200 pointer-events-none tracking-wider shadow-lg flex items-center gap-2 transition-opacity duration-500">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse"></span>
+      <span>{hint}</span>
     </div>
   </div>
 
   {caption && (
-    <p class="text-center font-mono text-xs text-moss-500 mt-3 tracking-wide">
-      {caption}
+    <p class="text-center font-mono text-xs text-moss-500 mt-4 tracking-wide">
+      ✦ {caption}
     </p>
   )}
 </div>
 
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+<script>
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+  function setupModelViewers() {
+    const containers = document.querySelectorAll<HTMLElement>('.model-viewer-container');
+
+    containers.forEach((container) => {
+      if (container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
+
+      const modelPath = container.dataset.model;
+      if (!modelPath) return;
+
+      const mount = container.querySelector<HTMLElement>('.canvas-mount');
+      const loaderEl = container.querySelector<HTMLElement>('.model-loader');
+      const hintEl = container.querySelector<HTMLElement>('.interaction-hint');
+      const loadText = container.querySelector<HTMLElement>('.load-text');
+      if (!mount) return;
+
+      // Clean existing children
+      mount.innerHTML = '';
+
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      // 1. Renderer
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.25;
+      mount.appendChild(renderer.domElement);
+
+      // 2. Scene & Camera
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(35, width / height, 0.05, 100);
+      camera.position.set(0, 0, 1.15);
+      const initialCameraPosition = camera.position.clone();
+
+      // 3. Studio Illumination (Dramatic Key + Terracotta Rim + Atmospheric Ambient)
+      const keyLight = new THREE.DirectionalLight(0xfff6ea, 2.5);
+      keyLight.position.set(4, 5, 4);
+      scene.add(keyLight);
+
+      // Fill / ambient depth
+      const fillLight = new THREE.HemisphereLight(0x7dd3fc, 0x1e293b, 2.2);
+      scene.add(fillLight);
+
+      // Golden / Terracotta Rim back-light for edge highlights
+      const rimLight = new THREE.DirectionalLight(0xfb923c, 8.5);
+      rimLight.position.set(-5, 4, -5);
+      scene.add(rimLight);
+
+      // Subtle warm ground bounce
+      const groundBounce = new THREE.DirectionalLight(0xa3e635, 1.2);
+      groundBounce.position.set(0, -4, 2);
+      scene.add(groundBounce);
+
+      // 4. Model & State
+      let model: THREE.Group | null = null;
+      let initialRotation = new THREE.Euler(0.2, -0.45, 0);
+      let autoRotate = true;
+      const AUTO_ROTATE_SPEED = 0.0035;
+      let idleTimeout: any;
+      const IDLE_DELAY = 2600;
+      let restoring = false;
+      const EASE = 0.06;
+      const EPS = 0.001;
+
+      // Zoom limits
+      const minZoom = 0.65;
+      const maxZoom = 1.7;
+
+      // Rotation limits (Cannot see underneath bottom part)
+      const MAX_ROT_X_UP = 1.35;    // Looking from slightly above
+      const MAX_ROT_X_DOWN = -0.05; // CLAMPED: strictly prevents camera looking up from below!
+
+      const loader = new GLTFLoader();
+      loader.load(
+        modelPath,
+        (gltf) => {
+          model = gltf.scene;
+
+          // Compute bounding box and center the model
+          const box = new THREE.Box3().setFromObject(model);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+
+          // Normalize scale so it fits nicely
+          const targetScale = 0.55 / (maxDim || 1);
+          model.scale.setScalar(targetScale);
+          model.position.sub(center.multiplyScalar(targetScale));
+
+          // Set initial pleasing angle
+          model.rotation.copy(initialRotation);
+          scene.add(model);
+
+          if (loaderEl) {
+            loaderEl.style.opacity = '0';
+            setTimeout(() => loaderEl.remove(), 500);
+          }
+
+          resetIdleTimer();
+        },
+        (xhr) => {
+          if (xhr.total > 0 && loadText) {
+            loadText.innerText = `${Math.round((xhr.loaded / xhr.total) * 100)}%`;
+          }
+        },
+        (err) => {
+          console.error('Error loading 3D model:', err);
+          if (loadText) loadText.innerText = 'Error loading 3D model';
+        }
+      );
+
+      // 5. Interaction Handlers
+      let isDragging = false;
+      let prevX = 0;
+      let prevY = 0;
+      const ROT_SPEED = 0.008;
+
+      function hideHint() {
+        if (hintEl) {
+          hintEl.style.opacity = '0';
+        }
+      }
+
+      function resetIdleTimer() {
+        clearTimeout(idleTimeout);
+        idleTimeout = setTimeout(() => {
+          restoring = true;
+        }, IDLE_DELAY);
+      }
+
+      function onPointerDown(clientX: number, clientY: number) {
+        isDragging = true;
+        prevX = clientX;
+        prevY = clientY;
+        autoRotate = false;
+        restoring = false;
+        clearTimeout(idleTimeout);
+        hideHint();
+      }
+
+      function onPointerMove(clientX: number, clientY: number) {
+        if (isDragging && model) {
+          const deltaX = clientX - prevX;
+          const deltaY = clientY - prevY;
+
+          model.rotation.y += deltaX * ROT_SPEED;
+          model.rotation.x += deltaY * ROT_SPEED;
+
+          // Clamp vertical pitch so user can NEVER look up from underneath
+          if (model.rotation.x > MAX_ROT_X_UP) model.rotation.x = MAX_ROT_X_UP;
+          if (model.rotation.x < MAX_ROT_X_DOWN) model.rotation.x = MAX_ROT_X_DOWN;
+
+          prevX = clientX;
+          prevY = clientY;
+        }
+      }
+
+      function onPointerUp() {
+        if (isDragging) {
+          isDragging = false;
+          resetIdleTimer();
+        }
+      }
+
+      // Mouse events
+      container.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY));
+      window.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
+      window.addEventListener('mouseup', onPointerUp);
+
+      // Touch events
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1 && isDragging) {
+          onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', onPointerUp);
+
+      // Wheel Zoom
+      container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        camera.position.z += e.deltaY * 0.0012;
+        if (camera.position.z < minZoom) camera.position.z = minZoom;
+        if (camera.position.z > maxZoom) camera.position.z = maxZoom;
+        autoRotate = false;
+        restoring = false;
+        hideHint();
+        resetIdleTimer();
+      }, { passive: false });
+
+      // Resize
+      const resizeObserver = new ResizeObserver(() => {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+      resizeObserver.observe(container);
+
+      // 6. Animation Loop (Smooth Idle Reset -> Auto Rotate)
+      let reqId: number;
+      function animate() {
+        reqId = requestAnimationFrame(animate);
+
+        if (model) {
+          if (restoring) {
+            // Lerp back smoothly to initial rotation & camera zoom
+            model.rotation.x += (initialRotation.x - model.rotation.x) * EASE;
+            model.rotation.y += (initialRotation.y - model.rotation.y) * EASE;
+            model.rotation.z += (initialRotation.z - model.rotation.z) * EASE;
+            camera.position.lerp(initialCameraPosition, EASE);
+
+            const rotDist = Math.abs(model.rotation.x - initialRotation.x) +
+                            Math.abs(model.rotation.y - initialRotation.y) +
+                            Math.abs(model.rotation.z - initialRotation.z);
+            const camDist = camera.position.distanceTo(initialCameraPosition);
+
+            if (rotDist < EPS && camDist < EPS) {
+              model.rotation.copy(initialRotation);
+              camera.position.copy(initialCameraPosition);
+              restoring = false;
+              autoRotate = true; // Seamlessly start idle rotation again!
+            }
+          } else if (autoRotate) {
+            model.rotation.y += AUTO_ROTATE_SPEED;
+          }
+        }
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Cleanup on page leave / swap
+      document.addEventListener('astro:before-swap', () => {
+        cancelAnimationFrame(reqId);
+        resizeObserver.disconnect();
+        renderer.dispose();
+      }, { once: true });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupModelViewers);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setupModelViewers();
+  } else {
+    document.addEventListener('DOMContentLoaded', setupModelViewers);
+  }
+</script>

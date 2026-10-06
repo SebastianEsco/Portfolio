@@ -1,35 +1,108 @@
 ---
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import { homeUrl, asset } from '../i18n/paths';
+import { homeUrl } from '../i18n/paths';
 import { languages } from '../i18n/ui';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const otherLang = Object.keys(languages).find(l => l !== lang) as keyof typeof languages;
+const otherLang = (Object.keys(languages).find(l => l !== lang) || 'en') as keyof typeof languages;
 const otherLangCode = otherLang.toUpperCase();
 ---
 
-<header class="fixed top-0 left-0 w-full z-50 py-6 px-6 md:px-12 flex justify-between items-center mix-blend-difference text-cream-100">
+<header class="fixed top-0 left-0 w-full z-50 py-5 px-6 md:px-12 flex justify-between items-center bg-forest-950/70 backdrop-blur-md border-b border-olive-700/30 text-cream-100 transition-all duration-300">
   <div class="flex items-center gap-4">
-    <a href={homeUrl(lang)} class="font-display text-xl font-medium tracking-wide">
+    <a href={homeUrl(lang)} class="font-display text-lg md:text-xl font-semibold tracking-tight hover:text-accent-400 transition-colors">
       Sebastián Escobar
     </a>
   </div>
   
-  <nav class="hidden md:flex items-center gap-8 font-sans text-sm uppercase tracking-widest text-cream-300">
+  {/* Desktop Navigation */}
+  <nav class="hidden md:flex items-center gap-8 font-sans text-xs uppercase tracking-widest text-cream-300">
     <a href={homeUrl(lang, '#work')} class="hover:text-cream-100 transition-colors">{t('nav.work')}</a>
     <a href={homeUrl(lang, '#experience')} class="hover:text-cream-100 transition-colors">{t('nav.experience')}</a>
     <a href={homeUrl(lang, '#contact')} class="hover:text-cream-100 transition-colors">{t('nav.contact')}</a>
     
-    <div class="h-4 w-px bg-olive-700 mx-2"></div>
+    <div class="h-4 w-px bg-olive-700/60 mx-1"></div>
     
-    <a href={homeUrl(otherLang)} class="hover:text-cream-100 transition-colors font-medium">
+    <a 
+      href={homeUrl(otherLang)} 
+      class="px-2.5 py-1 rounded-md border border-olive-700/60 text-cream-100 hover:border-accent-400 hover:text-accent-400 transition-all font-mono font-medium"
+      title={t('nav.switchLang')}
+    >
       {otherLangCode}
     </a>
   </nav>
 
-  <button class="md:hidden text-sm uppercase tracking-widest">
-    {t('nav.menu')}
-  </button>
+  {/* Mobile Controls */}
+  <div class="flex items-center gap-3 md:hidden">
+    <a 
+      href={homeUrl(otherLang)} 
+      class="px-2 py-1 rounded-md border border-olive-700/60 text-cream-100 font-mono text-xs"
+    >
+      {otherLangCode}
+    </a>
+
+    <button 
+      id="mobile-menu-btn" 
+      class="p-2 text-cream-100 hover:text-accent-400 focus:outline-none"
+      aria-label="Toggle Menu"
+    >
+      <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+      <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  {/* Mobile Dropdown Drawer */}
+  <div 
+    id="mobile-menu-drawer" 
+    class="fixed inset-x-0 top-full bg-forest-950/95 backdrop-blur-xl border-b border-olive-700/50 p-6 flex flex-col gap-5 text-base uppercase font-sans tracking-widest text-cream-200 hidden md:hidden shadow-2xl transition-all"
+  >
+    <a href={homeUrl(lang, '#work')} class="mobile-nav-link hover:text-accent-400 py-1 transition-colors">{t('nav.work')}</a>
+    <a href={homeUrl(lang, '#experience')} class="mobile-nav-link hover:text-accent-400 py-1 transition-colors">{t('nav.experience')}</a>
+    <a href={homeUrl(lang, '#contact')} class="mobile-nav-link hover:text-accent-400 py-1 transition-colors">{t('nav.contact')}</a>
+  </div>
 </header>
+
+<script>
+  function initMobileMenu() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const drawer = document.getElementById('mobile-menu-drawer');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+    const links = document.querySelectorAll('.mobile-nav-link');
+
+    if (!btn || !drawer) return;
+
+    function toggleMenu() {
+      const isHidden = drawer?.classList.toggle('hidden');
+      if (isHidden) {
+        iconOpen?.classList.remove('hidden');
+        iconClose?.classList.add('hidden');
+      } else {
+        iconOpen?.classList.add('hidden');
+        iconClose?.classList.remove('hidden');
+      }
+    }
+
+    btn.addEventListener('click', toggleMenu);
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        drawer.classList.add('hidden');
+        iconOpen?.classList.remove('hidden');
+        iconClose?.classList.add('hidden');
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initMobileMenu);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initMobileMenu();
+  } else {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  }
+</script>

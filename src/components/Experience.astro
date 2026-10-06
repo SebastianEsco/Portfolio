@@ -6,20 +6,28 @@ const t = useTranslations(lang);
 
 const experiences = [
   {
-    role: lang === 'es' ? 'Game & XR Developer' : 'Game & XR Developer',
-    company: 'New Company Placeholder',
-    date: '2024 — Present',
+    role: lang === 'es' ? 'Desarrollador Junior' : 'Junior Developer',
+    company: 'Waygroup',
+    date: lang === 'es' ? 'Junio 2024 — Presente' : 'June 2024 — Present',
     description: lang === 'es' 
-      ? 'Desarrollo de experiencias interactivas y soluciones XR. (Pendiente de detalles)' 
-      : 'Developing interactive experiences and XR solutions. (Awaiting details)'
+      ? 'Desarrollo de experiencias interactivas, herramientas XR y mantenimiento de proyectos.' 
+      : 'Development of interactive experiences, XR tools, and project maintenance.'
   },
   {
-    role: lang === 'es' ? 'Desarrollador Unity' : 'Unity Developer',
-    company: 'Freelance',
+    role: lang === 'es' ? 'Practicante de Desarrollo' : 'Development Intern',
+    company: 'Waygroup',
+    date: lang === 'es' ? 'Enero 2024 — Junio 2024' : 'January 2024 — June 2024',
+    description: lang === 'es'
+      ? 'Apoyo en el desarrollo de simuladores y aplicaciones de realidad virtual/aumentada.'
+      : 'Support in the development of simulators and virtual/augmented reality applications.'
+  },
+  {
+    role: lang === 'es' ? 'Desarrollador Freelance' : 'Freelance Developer',
+    company: 'Independiente / Freelance',
     date: '2022 — 2024',
     description: lang === 'es'
-      ? 'Creación de prototipos, juegos móviles y aplicaciones AR.'
-      : 'Creation of prototypes, mobile games, and AR applications.'
+      ? 'Creación de prototipos, juegos y aplicaciones.'
+      : 'Creation of prototypes, games, and applications.'
   }
 ];
 ---
@@ -34,7 +42,7 @@ const experiences = [
     {experiences.map((exp, i) => (
       <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
         {/* Timeline dot */}
-        <div class="flex items-center justify-center w-5 h-5 rounded-full border-2 border-brass-400 bg-forest-950 absolute left-0 md:left-1/2 md:-translate-x-1/2 shadow shadow-brass-400/20"></div>
+        <div class="flex items-center justify-center w-5 h-5 rounded-full border-2 border-accent-400 bg-forest-950 absolute left-0 md:left-1/2 md:-translate-x-1/2 shadow shadow-accent-400/20"></div>
         
         {/* Card */}
         <div class="ml-10 md:ml-0 md:w-[calc(50%-2rem)] md:group-even:text-right">

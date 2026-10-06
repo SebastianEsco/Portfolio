@@ -17,6 +17,11 @@ const projectsCollection = defineCollection({
     youtubeId: z.string().optional(),
     themeColor: z.string().optional(),
     award: z.string().optional(),
+    galleryImages: z.array(z.string()).optional(),
+    model3d: z.object({
+      path: z.string(),
+      caption: z.string().optional(),
+    }).optional(),
   })
 });
 

@@ -3,18 +3,143 @@ import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+// Pre-calculate frame paths. In public/frames/ we have 0001.jpg to 0060.jpg
+const frameCount = 60;
+const frames = Array.from({ length: frameCount }, (_, i) => {
+  const num = (i + 1).toString().padStart(4, '0');
+  return `/Portfolio/frames/${num}.jpg`;
+});
 ---
 
-<section class="relative h-[200vh]">
-  <!-- We'll implement the canvas scrubber here later -->
-  <div class="sticky top-0 h-screen flex flex-col justify-center items-center">
-    <div class="relative z-10 text-center">
-      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-cream-100 mb-4 drop-shadow-lg">
+<section id="hero" class="relative h-[200vh] bg-forest-950">
+  <div class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center items-center">
+    
+    <!-- Canvas for sequence -->
+    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen"></canvas>
+    
+    <!-- Gradient overlay to tie it to the design system -->
+    <div class="absolute inset-0 bg-gradient-to-b from-forest-950/40 via-forest-950/20 to-forest-950 pointer-events-none"></div>
+
+    <div class="relative z-10 text-center mt-20 px-6">
+      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-cream-100 mb-6 drop-shadow-lg tracking-tight">
         Sebastián Escobar
       </h1>
-      <p class="font-mono text-moss-500 uppercase tracking-widest text-sm md:text-base drop-shadow-md">
+      <p class="font-mono text-moss-500 uppercase tracking-widest text-sm md:text-base drop-shadow-md bg-forest-950/50 inline-block px-4 py-2 rounded-full border border-olive-700/50 backdrop-blur-sm">
         {t('hero.role')} · {t('hero.location')}
       </p>
     </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-60">
+      <span class="font-mono text-xs uppercase tracking-widest text-moss-500 mb-4">{t('hero.scroll')}</span>
+      <div class="w-px h-16 bg-gradient-to-b from-moss-500 to-transparent"></div>
+    </div>
   </div>
 </section>
+
+<script define:vars={{ frames, frameCount }}>
+  // Canvas scrubber script
+  function initHeroFrames() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    // We want the canvas internal resolution to match screen but maintain aspect ratio
+    let width, height;
+    
+    const loadedImages = new Array(frameCount);
+    let imagesLoaded = 0;
+    
+    // Resize handler
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      
+      // For high DPI screens
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      
+      render(Math.floor(currentFrameIndex));
+    }
+    
+    window.addEventListener('resize', resize);
+    
+    // Preload images
+    frames.forEach((src, index) => {
+      const img = new Image();
+      img.onload = () => {
+        imagesLoaded++;
+        if (imagesLoaded === 1) {
+          resize(); // draw first frame ASAP
+        }
+      };
+      img.src = src;
+      loadedImages[index] = img;
+    });
+
+    // Draw frame covering the canvas (object-fit: cover equivalent)
+    function render(index) {
+      if (index < 0) index = 0;
+      if (index >= frameCount) index = frameCount - 1;
+      
+      const img = loadedImages[index];
+      if (!img || !img.complete) return;
+      
+      ctx.clearRect(0, 0, width, height);
+      
+      const imgRatio = img.width / img.height;
+      const canvasRatio = width / height;
+      
+      let drawWidth, drawHeight, offsetX, offsetY;
+      
+      if (canvasRatio > imgRatio) {
+        drawWidth = width;
+        drawHeight = width / imgRatio;
+        offsetX = 0;
+        offsetY = (height - drawHeight) / 2;
+      } else {
+        drawWidth = height * imgRatio;
+        drawHeight = height;
+        offsetX = (width - drawWidth) / 2;
+        offsetY = 0;
+      }
+      
+      ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+    }
+
+    // Scroll logic
+    let currentFrameIndex = 0;
+    const section = document.getElementById('hero');
+    
+    function onScroll() {
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      // rect.top is 0 when sticky starts, going negative up to -window.innerHeight
+      const scrollProgress = -rect.top / window.innerHeight;
+      
+      // Clamp between 0 and 1
+      const progress = Math.max(0, Math.min(1, scrollProgress));
+      
+      currentFrameIndex = progress * (frameCount - 1);
+      render(Math.floor(currentFrameIndex));
+    }
+
+    window.addEventListener('scroll', () => {
+      requestAnimationFrame(onScroll);
+    }, { passive: true });
+    
+    // Initialize
+    resize();
+    onScroll();
+  }
+
+  document.addEventListener('astro:page-load', initHeroFrames);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initHeroFrames();
+  } else {
+    document.addEventListener('DOMContentLoaded', initHeroFrames);
+  }
+</script>

@@ -5,6 +5,7 @@ import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 import HeroFrames from '../../components/HeroFrames.astro';
 import BentoGrid from '../../components/BentoGrid.astro';
 import Experience from '../../components/Experience.astro';
+import Education from '../../components/Education.astro';
 import Skills from '../../components/Skills.astro';
 import Contact from '../../components/Contact.astro';
 
@@ -24,7 +25,7 @@ const t = useTranslations(lang);
       <div class="md:col-span-4">
         <!-- Placeholder for photo -->
         <div class="aspect-[3/4] bg-olive-700/50 rounded-lg overflow-hidden border border-olive-700">
-          <img src="/Portfolio/assets/SebasFoto.png" alt={t('about.photoAlt')} class="w-full h-full object-cover mix-blend-luminosity opacity-80" />
+          <img src="/Portfolio/images/SebasFoto.png" alt={t('about.photoAlt')} class="w-full h-full object-cover mix-blend-luminosity opacity-80" />
         </div>
       </div>
       <div class="md:col-span-8">
@@ -43,6 +44,7 @@ const t = useTranslations(lang);
 
   <BentoGrid />
   <Experience />
+  <Education />
   <Skills />
   <Contact />
   

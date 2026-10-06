@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title: string;
@@ -23,18 +24,45 @@ const t = useTranslations(lang);
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<ClientRouter />
 		
-		<!-- Preconnect to Google Fonts if we use them, though plan says self-hosted. 
-             For MVP, let's load them via Google Fonts, we can self-host later if needed -->
+		<!-- Google Fonts for Outfit (display), Manrope (body), and JetBrains Mono -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..900&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
 	</head>
-	<body class="bg-forest-950 text-cream-100 min-h-screen flex flex-col bg-grain">
+	<body class="bg-forest-950 text-cream-100 min-h-screen flex flex-col">
 		<Header />
 		<main class="flex-grow">
 			<slot />
 		</main>
 		<Footer />
+
+		<script>
+			import Lenis from 'lenis';
+
+			let lenis: Lenis | null = null;
+			function initLenis() {
+			  if (lenis) lenis.destroy();
+			  lenis = new Lenis({
+			    duration: 1.2,
+			    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+			    orientation: 'vertical',
+			    gestureOrientation: 'vertical',
+			    smoothWheel: true,
+			    wheelMultiplier: 1,
+			    smoothTouch: false,
+			    touchMultiplier: 2,
+			  });
+			  function raf(time: number) {
+			    lenis?.raf(time);
+			    requestAnimationFrame(raf);
+			  }
+			  requestAnimationFrame(raf);
+			}
+
+			document.addEventListener('astro:page-load', initLenis);
+			initLenis();
+		</script>
 	</body>
 </html>

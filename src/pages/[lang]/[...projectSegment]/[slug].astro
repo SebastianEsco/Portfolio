@@ -1,9 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { langs, projectsSegment, fallbackLang } from '../../../i18n/ui';
+import { langs, projectsSegment } from '../../../i18n/ui';
 import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { homeUrl } from '../../../i18n/paths';
+import ModelViewer from '../../../components/ModelViewer.astro';
+import { homeUrl, projectUrl } from '../../../i18n/paths';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -11,23 +12,34 @@ export async function getStaticPaths() {
 
   for (const lang of langs) {
     const langProjects = projects.filter(p => p.id.startsWith(`${lang}/`));
-    for (const project of langProjects) {
+    // Sort projects: Echoes first, then by year
+    const sortedProjects = [...langProjects].sort((a, b) => {
+      const isEchoesA = a.id.includes('echoes');
+      const isEchoesB = b.id.includes('echoes');
+      if (isEchoesA && !isEchoesB) return -1;
+      if (!isEchoesA && isEchoesB) return 1;
+      return b.data.year - a.data.year;
+    });
+
+    sortedProjects.forEach((project, idx) => {
       const slug = project.id.replace(`${lang}/`, '').replace('.md', '');
+      const nextProject = sortedProjects[(idx + 1) % sortedProjects.length];
+      const nextSlug = nextProject.id.replace(`${lang}/`, '').replace('.md', '');
       paths.push({
         params: {
           lang,
           projectSegment: projectsSegment[lang],
           slug
         },
-        props: { project }
+        props: { project, nextProject, nextSlug }
       });
-    }
+    });
   }
 
   return paths;
 }
 
-const { project } = Astro.props;
+const { project, nextProject, nextSlug } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const { Content } = await render(project);
@@ -36,39 +48,197 @@ const { Content } = await render(project);
 <BaseLayout title={`${project.data.title} · Sebastián Escobar`} description={project.data.title}>
   <article class="pt-32 pb-24 px-6 md:px-12 max-w-4xl mx-auto">
     
+    <!-- Top breadcrumb / navigation -->
     <div class="mb-12">
-      <a href={homeUrl(lang, '#work')} class="inline-flex items-center text-moss-500 font-sans text-sm hover:text-cream-100 transition-colors mb-8">
-        <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <a href={homeUrl(lang, '#work')} class="inline-flex items-center text-moss-500 font-sans text-sm hover:text-cream-100 transition-colors mb-8 group">
+        <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
         {t('project.back')}
       </a>
       
-      <h1 class="font-display text-5xl md:text-7xl text-cream-100 mb-6">{project.data.title}</h1>
+      <div class="flex items-center gap-3 mb-4 flex-wrap">
+        {project.data.award && (
+          <span class="px-2.5 py-1 bg-rust-500 text-cream-100 text-[10px] uppercase tracking-widest font-mono rounded-md shadow-sm">
+            ★ {project.data.award}
+          </span>
+        )}
+      </div>
+
+      <h1 class="font-display text-4xl sm:text-6xl md:text-7xl text-cream-100 font-semibold tracking-tight mb-8">
+        {project.data.title}
+      </h1>
       
-      <div class="flex flex-wrap gap-4 font-mono text-xs uppercase tracking-widest text-moss-500 mb-8 border-y border-olive-700/30 py-4">
-        <span>{t('project.year')}: <strong class="text-cream-300 font-medium">{project.data.year}</strong></span>
-        <span>{t('project.platform')}: <strong class="text-cream-300 font-medium">{project.data.platform}</strong></span>
-        <span>{t('project.engine')}: <strong class="text-cream-300 font-medium">{project.data.engine}</strong></span>
-        <span>{t('project.role')}: <strong class="text-cream-300 font-medium">{project.data.role}</strong></span>
+      {/* Meta detail grid */}
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs uppercase tracking-wider text-moss-500 border-y border-olive-700/40 py-5 bg-forest-900/40 rounded-xl px-5">
+        <div>
+          <span class="text-moss-500/70 block mb-1">{t('project.year')}</span>
+          <strong class="text-cream-100 font-medium text-sm">{project.data.year}</strong>
+        </div>
+        <div>
+          <span class="text-moss-500/70 block mb-1">{t('project.platform')}</span>
+          <strong class="text-cream-100 font-medium text-sm">{project.data.platform}</strong>
+        </div>
+        <div>
+          <span class="text-moss-500/70 block mb-1">{t('project.engine')}</span>
+          <strong class="text-cream-100 font-medium text-sm">{project.data.engine}</strong>
+        </div>
+        <div>
+          <span class="text-moss-500/70 block mb-1">{t('project.role')}</span>
+          <strong class="text-cream-100 font-medium text-sm">{project.data.role}</strong>
+        </div>
       </div>
     </div>
     
+    {/* YouTube Video trailer */}
     {project.data.youtubeId && (
-      <div class="aspect-video w-full rounded-xl overflow-hidden bg-forest-900 border border-olive-700 mb-16 relative group">
+      <div class="aspect-video w-full rounded-2xl overflow-hidden bg-forest-900 border border-olive-700/60 mb-16 shadow-2xl relative">
          <iframe 
             class="w-full h-full" 
             src={`https://www.youtube.com/embed/${project.data.youtubeId}?autoplay=0&rel=0`} 
-            title="YouTube video player" 
-            frameborder="0" 
+            title="Project Trailer" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
             allowfullscreen>
          </iframe>
       </div>
     )}
 
-    <div class="prose prose-invert prose-p:text-cream-300 prose-headings:text-cream-100 prose-headings:font-display prose-a:text-brass-400 max-w-none prose-lg">
+    {/* Prose Content */}
+    <div class="prose prose-invert prose-p:text-cream-300 prose-p:leading-relaxed prose-headings:text-cream-100 prose-headings:font-display prose-headings:tracking-tight prose-a:text-accent-400 prose-strong:text-cream-100 max-w-none prose-lg">
       <Content />
     </div>
+
+    {/* Optional 3D Model viewer */}
+    {project.data.model3d && (
+      <ModelViewer 
+        modelPath={project.data.model3d.path} 
+        caption={project.data.model3d.caption}
+        hint={lang === 'es' ? 'Arrastra para girar · Rueda para acercar' : 'Drag to rotate · Scroll to zoom'}
+      />
+    )}
+
+    {/* Image Gallery */}
+    {project.data.galleryImages && project.data.galleryImages.length > 0 && (
+      <div class="mt-24 pt-12 border-t border-olive-700/40">
+        <h3 class="font-display text-3xl text-cream-100 font-semibold mb-8 tracking-tight">{t('project.gallery')}</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="gallery-grid">
+          {project.data.galleryImages.map((img, index) => (
+            <button 
+              type="button"
+              class="gallery-thumb rounded-xl overflow-hidden bg-forest-900 border border-olive-700/60 group relative aspect-[16/10] text-left cursor-pointer transition-all duration-300 hover:border-accent-400/80 hover:shadow-xl"
+              data-img-src={img}
+              data-img-index={index}
+              aria-label={`View gallery image ${index + 1}`}
+            >
+              <img 
+                src={img} 
+                alt={`${project.data.title} screenshot ${index + 1}`} 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
+                loading="lazy" 
+              />
+              <div class="absolute inset-0 bg-forest-950/20 group-hover:bg-transparent transition-colors"></div>
+              <div class="absolute bottom-3 right-3 p-1.5 rounded-lg bg-forest-950/80 border border-olive-700/60 text-cream-100 opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                </svg>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* Next project CTA card */}
+    {nextProject && (
+      <div class="mt-28 pt-12 border-t border-olive-700/40">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-mono uppercase tracking-widest text-moss-500">{t('project.next')}</span>
+          <a href={homeUrl(lang, '#work')} class="text-xs font-mono uppercase tracking-widest text-moss-500 hover:text-cream-100 transition-colors">
+            {t('project.back')} ↑
+          </a>
+        </div>
+        <a 
+          href={projectUrl(lang, nextSlug)} 
+          class="group block p-8 rounded-2xl bg-forest-900 border border-olive-700/60 hover:border-accent-400/80 transition-all duration-300 hover:shadow-2xl relative overflow-hidden"
+        >
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs font-mono text-moss-500 uppercase">{nextProject.data.year}</span>
+                <span class="w-1 h-1 rounded-full bg-olive-700"></span>
+                <span class="text-xs font-mono text-moss-500 uppercase">{nextProject.data.platform}</span>
+              </div>
+              <h4 class="text-3xl sm:text-4xl font-display text-cream-100 group-hover:text-accent-400 transition-colors font-semibold tracking-tight">
+                {nextProject.data.title}
+              </h4>
+            </div>
+            
+            <div class="flex items-center text-accent-400 font-sans text-sm font-semibold group-hover:translate-x-2 transition-transform shrink-0">
+              <span class="mr-2">{t('work.view')}</span>
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+      </div>
+    )}
+
   </article>
+
+  {/* Lightbox Modal */}
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-forest-950/95 backdrop-blur-md hidden items-center justify-center p-4 sm:p-8" role="dialog" aria-modal="true">
+    <button id="lightbox-close" class="absolute top-6 right-6 p-3 text-cream-300 hover:text-cream-100 rounded-full bg-forest-900/80 border border-olive-700/60 hover:border-accent-400 transition-colors" aria-label="Close modal">
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <div class="max-w-5xl max-h-[85vh] w-full flex items-center justify-center">
+      <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl border border-olive-700/50" />
+    </div>
+  </div>
 </BaseLayout>
+
+<script>
+  // Simple, accessible gallery lightbox controller
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('lightbox-modal');
+    const modalImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+    const closeBtn = document.getElementById('lightbox-close');
+    const thumbs = document.querySelectorAll<HTMLButtonElement>('.gallery-thumb');
+
+    if (!modal || !modalImg) return;
+
+    function openModal(src: string) {
+      modalImg!.src = src;
+      modal!.classList.remove('hidden');
+      modal!.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal!.classList.add('hidden');
+      modal!.classList.remove('flex');
+      modalImg!.src = '';
+      document.body.style.overflow = '';
+    }
+
+    thumbs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.getAttribute('data-img-src');
+        if (src) openModal(src);
+      });
+    });
+
+    closeBtn?.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+  });
+</script>

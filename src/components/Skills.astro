@@ -7,19 +7,25 @@ const t = useTranslations(lang);
 const skillGroups = [
   {
     name: t('skills.engines'),
-    items: ['Unity (URP / HDRP)', 'Unreal Engine 5']
+    items: ['Unity Engine', 'Unreal Engine 5']
   },
   {
     name: t('skills.languages'),
-    items: ['C#', 'C++', 'JavaScript / TypeScript', 'Python']
+    items: ['C#', 'Blueprints', 'Python']
   },
   {
     name: t('skills.xr'),
-    items: ['Meta Quest (VR)', 'ARCore / ARKit', 'Vuforia', 'WebXR']
+    items: ['Meta SDK (Unity / Unreal)', 'Vuforia']
   },
   {
     name: t('skills.tools'),
-    items: ['Blender', 'Git', 'Figma', 'Adobe Suite']
+    items: [
+      'Reaper',
+      'Blender',
+      'Git',
+      'Figma',
+      lang === 'es' ? 'Edición de Fotos' : 'Photo Editing'
+    ]
   }
 ];
 ---

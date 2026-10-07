@@ -68,7 +68,7 @@ const t = useTranslations(lang);
 			document.addEventListener('astro:page-load', initLenis);
 			initLenis();
 
-			// Scroll-driven assembly observer
+			// Scroll-driven bidirectional assembly observer
 			function initScrollAssembly() {
 			  const reveals = document.querySelectorAll<HTMLElement>('.scroll-reveal');
 			  if (!reveals.length) return;
@@ -76,17 +76,22 @@ const t = useTranslations(lang);
 			  const observer = new IntersectionObserver(
 			    (entries) => {
 			      entries.forEach((entry) => {
+			        const el = entry.target as HTMLElement;
+			        const delay = parseInt(el.dataset.delay || '0', 10);
+
 			        if (entry.isIntersecting) {
-			          const el = entry.target as HTMLElement;
-			          const delay = parseInt(el.dataset.delay || '0', 10);
 			          setTimeout(() => {
 			            el.classList.add('is-revealed');
 			          }, delay);
-			          observer.unobserve(el);
+			        } else {
+			          // Reset element when scrolling back up (element moves below viewport)
+			          if (entry.boundingClientRect.top > 0) {
+			            el.classList.remove('is-revealed');
+			          }
 			        }
 			      });
 			    },
-			    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+			    { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
 			  );
 
 			  reveals.forEach((el) => observer.observe(el));

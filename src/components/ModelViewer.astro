@@ -13,6 +13,7 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
     class="model-viewer-container relative w-full h-[460px] md:h-[580px] bg-gradient-to-b from-forest-900 to-forest-950 rounded-2xl border border-olive-700/60 overflow-hidden shadow-2xl select-none cursor-grab active:cursor-grabbing"
     data-model={modelPath}
     data-hint={hint}
+    data-lenis-prevent="true"
   >
     <!-- Subtle radial spotlight backdrop behind 3D model -->
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(251,146,60,0.08),transparent_70%)] pointer-events-none"></div>
@@ -230,9 +231,11 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
 
       window.addEventListener('touchend', onPointerUp);
 
-      // Wheel Zoom
+      // Wheel Zoom - Freeze page scroll completely
       container.addEventListener('wheel', (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         camera.position.z += e.deltaY * 0.0012;
         if (camera.position.z < minZoom) camera.position.z = minZoom;
         if (camera.position.z > maxZoom) camera.position.z = maxZoom;
@@ -240,7 +243,7 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
         restoring = false;
         hideHint();
         resetIdleTimer();
-      }, { passive: false });
+      }, { passive: false, capture: true });
 
       // Resize
       const resizeObserver = new ResizeObserver(() => {

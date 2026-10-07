@@ -1,7 +1,7 @@
 ---
 import { homeUrl } from '../i18n/paths';
 
-const target = homeUrl('es');
+const target = homeUrl('en');
 ---
 <!DOCTYPE html>
 <html>
@@ -10,11 +10,11 @@ const target = homeUrl('es');
     <title>Redirecting...</title>
     <meta http-equiv="refresh" content={`0;url=${target}`}>
     <script define:vars={{ target }}>
-      // Try to read browser language before redirecting
+      // Default landing language is English. Redirects to Spanish if browser is set to Spanish.
       var lang = navigator.language || navigator.userLanguage;
-      var redirectLang = target; // defaults to 'es' target path
-      if (lang && lang.toLowerCase().startsWith('en')) {
-        redirectLang = target.replace('/es/', '/en/');
+      var redirectLang = target;
+      if (lang && lang.toLowerCase().startsWith('es')) {
+        redirectLang = target.replace('/en/', '/es/');
       }
       window.location.replace(redirectLang);
     </script>

@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import AmbientLights from '../components/AmbientLights.astro';
 import { ClientRouter } from 'astro:transitions';
 
 interface Props {
@@ -31,9 +32,10 @@ const t = useTranslations(lang);
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..900&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
 	</head>
-	<body class="bg-forest-950 text-cream-100 min-h-screen flex flex-col">
+	<body class="bg-forest-950 text-cream-100 min-h-screen flex flex-col relative">
+		<AmbientLights />
 		<Header />
-		<main class="flex-grow">
+		<main class="flex-grow relative z-10">
 			<slot />
 		</main>
 		<Footer />

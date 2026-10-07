@@ -80,18 +80,23 @@ const t = useTranslations(lang);
 			        const delay = parseInt(el.dataset.delay || '0', 10);
 
 			        if (entry.isIntersecting) {
+			          // Assembly entrance delay
 			          setTimeout(() => {
 			            el.classList.add('is-revealed');
 			          }, delay);
 			        } else {
-			          // Reset element when scrolling back up (element moves below viewport)
+			          // Disassembly exit when scrolling back up (while still in lower view area)
 			          if (entry.boundingClientRect.top > 0) {
-			            el.classList.remove('is-revealed');
+			            // Delayed revert so you visibly see them glide apart in sequence!
+			            setTimeout(() => {
+			              el.classList.remove('is-revealed');
+			            }, delay * 0.7);
 			          }
 			        }
 			      });
 			    },
-			    { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+			    // -160px bottom margin means the trigger is well inside the visible screen!
+			    { threshold: 0.12, rootMargin: '0px 0px -160px 0px' }
 			  );
 
 			  reveals.forEach((el) => observer.observe(el));

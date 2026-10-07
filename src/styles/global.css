@@ -32,21 +32,21 @@
 /* Scroll-driven Assembly Motion */
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(35px) scale(0.98);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(45px) scale(0.97);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
 .scroll-reveal.reveal-left {
-  transform: translateX(-35px) translateY(15px) scale(0.98);
+  transform: translateX(-50px) translateY(25px) scale(0.97);
 }
 
 .scroll-reveal.reveal-right {
-  transform: translateX(35px) translateY(15px) scale(0.98);
+  transform: translateX(50px) translateY(25px) scale(0.97);
 }
 
 .scroll-reveal.reveal-up {
-  transform: translateY(40px) scale(0.97);
+  transform: translateY(55px) scale(0.96);
 }
 
 .scroll-reveal.is-revealed {

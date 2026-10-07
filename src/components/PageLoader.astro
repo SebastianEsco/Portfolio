@@ -1,0 +1,121 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div 
+  id="page-intro-loader" 
+  class="fixed inset-0 z-[9999] bg-forest-950 flex flex-col items-center justify-center select-none overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
+  aria-hidden="true"
+>
+  <!-- Background subtle warm ambient glow -->
+  <div class="absolute w-[600px] h-[600px] rounded-full bg-accent-400/15 blur-[120px] pointer-events-none animate-pulse"></div>
+
+  <!-- Intro Content Container -->
+  <div id="loader-content" class="relative z-10 text-center px-6 transition-all duration-500 ease-out">
+    <!-- Meta mono subtitle -->
+    <div class="overflow-hidden mb-3">
+      <span class="inline-block font-mono text-xs sm:text-sm text-moss-500 uppercase tracking-[0.3em] loader-sub">
+        {lang === 'es' ? 'DESARROLLADOR DE VIDEOJUEGOS & XR' : 'GAME & XR DEVELOPER'}
+      </span>
+    </div>
+
+    <!-- Big cinematic name -->
+    <div class="overflow-hidden py-1">
+      <h1 class="font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-cream-100 loader-title">
+        Sebastián Escobar
+      </h1>
+    </div>
+
+    <!-- Expanding terracotta accent line -->
+    <div class="w-48 sm:w-64 h-[2px] bg-olive-700/60 mx-auto mt-6 rounded-full overflow-hidden relative">
+      <div id="loader-progress-bar" class="absolute inset-y-0 left-0 w-0 bg-accent-400 rounded-full transition-all duration-1000 ease-out"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .loader-title {
+    animation: titleReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .loader-sub {
+    animation: subReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes titleReveal {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.97);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes subReveal {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Curtain reveal animation on dismissal */
+  #page-intro-loader.dismissed {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+  }
+
+  #page-intro-loader.dismissed #loader-content {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+</style>
+
+<script>
+  function runIntroLoader() {
+    const loader = document.getElementById('page-intro-loader');
+    const bar = document.getElementById('loader-progress-bar');
+    if (!loader) return;
+
+    // Check if user already saw the intro in this tab session
+    const hasSeen = sessionStorage.getItem('portfolio_intro_seen');
+    if (hasSeen) {
+      loader.style.display = 'none';
+      return;
+    }
+
+    // Lock scroll during intro
+    document.body.style.overflow = 'hidden';
+
+    // Animate progress bar fill
+    setTimeout(() => {
+      if (bar) bar.style.width = '100%';
+    }, 150);
+
+    // Dismiss loader smoothly and transition to site
+    setTimeout(() => {
+      loader.classList.add('dismissed');
+      document.body.style.overflow = '';
+      sessionStorage.setItem('portfolio_intro_seen', 'true');
+
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 750);
+    }, 1300);
+  }
+
+  // Run on first load
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    runIntroLoader();
+  } else {
+    document.addEventListener('DOMContentLoaded', runIntroLoader);
+  }
+</script>

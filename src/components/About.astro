@@ -8,30 +8,30 @@ const t = useTranslations(lang);
 <section id="about" class="about-section relative py-32 px-6 md:px-12 max-w-7xl mx-auto">
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
     
-    <!-- Left: Parallax Photo Showcase with Smooth Damped 3D Tilt -->
+    <!-- Left: Photo Showcase with Smooth 3D Perspective Tilt & Specular Sheen (No cut-off) -->
     <div class="lg:col-span-5 relative group">
       <!-- Soft ambient backdrop glow -->
       <div class="absolute -inset-2 bg-gradient-to-r from-accent-400/20 via-olive-700/20 to-moss-500/20 rounded-3xl blur-xl opacity-40 group-hover:opacity-75 transition duration-700 pointer-events-none"></div>
 
-      <!-- Main photo card -->
+      <!-- Main photo card with 3D tilt -->
       <div 
         id="about-photo-card" 
         class="relative w-full h-[520px] sm:h-[600px] lg:h-[660px] rounded-3xl overflow-hidden bg-forest-900 border border-olive-700/80 shadow-2xl will-change-transform"
       >
-        <!-- Oversized parallax image gliding smoothly inside container -->
+        <!-- Portrait image cleanly framed with object-top (his head and body are never cut off) -->
         <img 
-          id="about-parallax-img" 
+          id="about-portrait-img" 
           src="/Portfolio/images/SebasFoto.png" 
           alt={t('about.photoAlt')} 
-          class="absolute -top-[14%] left-0 w-full h-[128%] object-cover object-top filter grayscale contrast-125 brightness-95 opacity-85 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out will-change-transform pointer-events-none"
+          class="w-full h-full object-cover object-top filter grayscale contrast-125 brightness-95 opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out pointer-events-none"
           loading="eager"
         />
 
-        <!-- Multi-stop cinematic dark gradient overlays -->
-        <div class="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/25 to-transparent pointer-events-none"></div>
+        <!-- Multi-stop cinematic dark gradient overlays for seamless integration -->
+        <div class="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/20 to-transparent pointer-events-none"></div>
         <div class="absolute inset-0 bg-forest-950/15 mix-blend-multiply pointer-events-none"></div>
 
-        <!-- Specular reflection sheen -->
+        <!-- Specular reflection sheen following mouse -->
         <div class="photo-sheen absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-[radial-gradient(circle_at_var(--sheen-x,50%)_var(--sheen-y,50%),rgba(255,255,255,0.12),transparent_60%)]"></div>
 
         <!-- Floating live status badge -->
@@ -117,66 +117,37 @@ const t = useTranslations(lang);
 
 <script>
   function initAboutInteractions() {
-    const section = document.querySelector<HTMLElement>('.about-section');
     const photoCard = document.getElementById('about-photo-card');
-    const parallaxImg = document.getElementById('about-parallax-img');
+    if (!photoCard) return;
 
-    if (!section || !photoCard || !parallaxImg) return;
-
-    let targetParallax = 0;
-    let currentParallax = 0;
     let targetTiltX = 0;
     let targetTiltY = 0;
     let currentTiltX = 0;
     let currentTiltY = 0;
-    let isHoveringCard = false;
 
-    // 1. Smooth Parallax Calculation synchronized with scroll
-    function updateScrollTarget() {
-      const rect = section!.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      if (rect.top < windowHeight && rect.bottom > 0) {
-        // Continuous smooth progress across viewport
-        const progress = (windowHeight - rect.top) / (windowHeight + rect.height);
-        // Subtle, elegant vertical float between -35px and +35px
-        targetParallax = (progress - 0.5) * 70;
-      }
-    }
-
-    window.addEventListener('scroll', updateScrollTarget, { passive: true });
-    updateScrollTarget();
-
-    // 2. Smooth 3D tilt tracking on photo card
+    // Smooth 3D perspective tilt tracking on photo card
     photoCard.addEventListener('mousemove', (e) => {
-      isHoveringCard = true;
       const rect = photoCard.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      targetTiltX = ((y - centerY) / centerY) * -5; // max 5 deg tilt
-      targetTiltY = ((x - centerX) / centerX) * 5;  // max 5 deg tilt
+      targetTiltX = ((y - centerY) / centerY) * -6; // max 6 deg tilt
+      targetTiltY = ((x - centerX) / centerX) * 6;  // max 6 deg tilt
 
       photoCard.style.setProperty('--sheen-x', `${(x / rect.width) * 100}%`);
       photoCard.style.setProperty('--sheen-y', `${(y / rect.height) * 100}%`);
     });
 
     photoCard.addEventListener('mouseleave', () => {
-      isHoveringCard = false;
       targetTiltX = 0;
       targetTiltY = 0;
     });
 
-    // 3. Unified continuous RAF loop for liquid-smooth physics (Lerp)
+    // Continuous RAF lerp loop for physically damped smooth tilt
     let animId: number;
     function renderLoop() {
-      // Lerp parallax offset smoothly
-      currentParallax += (targetParallax - currentParallax) * 0.08;
-      parallaxImg!.style.transform = `translate3d(0, ${currentParallax}px, 0)`;
-
-      // Lerp tilt smoothly
       currentTiltX += (targetTiltX - currentTiltX) * 0.1;
       currentTiltY += (targetTiltY - currentTiltY) * 0.1;
       photoCard!.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg)`;
@@ -187,7 +158,6 @@ const t = useTranslations(lang);
 
     document.addEventListener('astro:before-swap', () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener('scroll', updateScrollTarget);
     }, { once: true });
   }
 

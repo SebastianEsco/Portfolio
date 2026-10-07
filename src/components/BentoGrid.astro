@@ -22,7 +22,7 @@ const projects = allProjects.sort((a, b) => {
 ---
 
 <section id="work" class="py-24 px-6 md:px-12 max-w-7xl mx-auto">
-  <div class="flex items-baseline justify-between mb-12">
+  <div class="flex items-baseline justify-between mb-12 scroll-reveal reveal-up">
     <div>
       <h2 class="font-mono text-moss-500 uppercase tracking-widest text-xs md:text-sm mb-3">{t('work.label')}</h2>
       <h3 class="font-display text-4xl md:text-5xl text-cream-100 font-semibold tracking-tight">{t('work.title')}</h3>
@@ -31,23 +31,31 @@ const projects = allProjects.sort((a, b) => {
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8 auto-rows-[340px] md:auto-rows-[380px] lg:auto-rows-[320px]">
     {projects.map((project, index) => {
-      let cardClasses = "bento-card group relative rounded-2xl overflow-hidden bg-forest-900 border border-olive-700/60 block transition-all duration-500 hover:border-accent-400/60 hover:shadow-2xl hover:shadow-black/60";
-      
+      let cardClasses = "bento-card group relative rounded-2xl overflow-hidden bg-forest-900 border border-olive-700/60 block transition-all duration-500 hover:border-accent-400/60 hover:shadow-2xl hover:shadow-black/60 scroll-reveal";
+      let delay = 0;
+
       if (index === 0) {
-        // Echoes: Massive primary feature card spanning 8 columns and 2 rows
-        cardClasses += " lg:col-span-8 lg:row-span-2 min-h-[460px] lg:min-h-full";
-      } else if (index === 1 || index === 2) {
-        // Secondary cards stacked on the right
-        cardClasses += " lg:col-span-4 lg:row-span-1 min-h-[300px]";
+        // Echoes: Massive primary feature card sliding in from left
+        cardClasses += " lg:col-span-8 lg:row-span-2 min-h-[460px] lg:min-h-full reveal-left";
+        delay = 0;
+      } else if (index === 1) {
+        // Kapsula: Top right sliding in from right
+        cardClasses += " lg:col-span-4 lg:row-span-1 min-h-[300px] reveal-right";
+        delay = 150;
+      } else if (index === 2) {
+        // Nuclear: Bottom right sliding in from right
+        cardClasses += " lg:col-span-4 lg:row-span-1 min-h-[300px] reveal-right";
+        delay = 300;
       } else {
-        // Fourth project: Panoramic card spanning the full width below
-        cardClasses += " md:col-span-2 lg:col-span-12 lg:row-span-1 min-h-[280px]";
+        // Balcones: Panoramic card sliding up from bottom
+        cardClasses += " md:col-span-2 lg:col-span-12 lg:row-span-1 min-h-[280px] reveal-up";
+        delay = 200;
       }
 
       const slug = project.id.replace(`${lang}/`, '').replace('.md', '');
 
       return (
-        <a href={projectUrl(lang, slug)} class={cardClasses} data-slug={slug}>
+        <a href={projectUrl(lang, slug)} class={cardClasses} data-slug={slug} data-delay={delay}>
           {/* Visual media container */}
           <div class="absolute inset-0 z-0 overflow-hidden">
             <img 

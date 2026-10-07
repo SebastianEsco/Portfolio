@@ -2,28 +2,28 @@
 ---
 
 <div id="ambient-lighting-layer" class="fixed inset-0 pointer-events-none z-20 overflow-hidden" aria-hidden="true">
-  <!-- Primary Lerped Cursor Spotlight (Luminous Terracotta Core) -->
+  <!-- Primary Lerped Cursor Spotlight (Subtle, soft Terracotta glow) -->
   <div 
     id="cursor-spotlight" 
-    class="absolute w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none opacity-0 transition-opacity duration-500 blur-2xl will-change-transform bg-[radial-gradient(circle,rgba(251,146,60,0.18)_0%,rgba(251,146,60,0.06)_40%,transparent_70%)]"
+    class="absolute w-[750px] h-[750px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none opacity-0 transition-opacity duration-500 blur-3xl will-change-transform bg-[radial-gradient(circle,rgba(251,146,60,0.10)_0%,rgba(251,146,60,0.03)_45%,transparent_70%)]"
   ></div>
 
-  <!-- Ambient Orb 1: Warm Vivid Terracotta (Floating top-left / center) -->
+  <!-- Ambient Orb 1: Warm Subtle Terracotta -->
   <div 
     id="ambient-orb-1" 
-    class="ambient-orb absolute w-[550px] h-[550px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none blur-[90px] opacity-75 will-change-transform bg-[radial-gradient(circle,rgba(251,146,60,0.22)_0%,rgba(251,146,60,0.08)_50%,transparent_70%)]"
+    class="ambient-orb absolute w-[520px] h-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none blur-[100px] opacity-40 will-change-transform bg-[radial-gradient(circle,rgba(251,146,60,0.14)_0%,rgba(251,146,60,0.04)_50%,transparent_70%)]"
   ></div>
 
-  <!-- Ambient Orb 2: Vibrant Moss / Emerald Hue (Floating right / middle) -->
+  <!-- Ambient Orb 2: Gentle Moss Tone -->
   <div 
     id="ambient-orb-2" 
-    class="ambient-orb absolute w-[650px] h-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none blur-[110px] opacity-70 will-change-transform bg-[radial-gradient(circle,rgba(163,230,53,0.14)_0%,rgba(122,134,89,0.20)_45%,transparent_70%)]"
+    class="ambient-orb absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none blur-[120px] opacity-35 will-change-transform bg-[radial-gradient(circle,rgba(163,230,53,0.08)_0%,rgba(122,134,89,0.12)_45%,transparent_70%)]"
   ></div>
 
-  <!-- Ambient Orb 3: Warm Brass / Solar Amber Hue (Floating bottom-center) -->
+  <!-- Ambient Orb 3: Soft Amber / Cream Tone -->
   <div 
     id="ambient-orb-3" 
-    class="ambient-orb absolute w-[500px] h-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none blur-[85px] opacity-65 will-change-transform bg-[radial-gradient(circle,rgba(245,158,11,0.18)_0%,rgba(241,235,219,0.06)_50%,transparent_70%)]"
+    class="ambient-orb absolute w-[460px] h-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none blur-[90px] opacity-30 will-change-transform bg-[radial-gradient(circle,rgba(245,158,11,0.10)_0%,rgba(241,235,219,0.035)_50%,transparent_70%)]"
   ></div>
 </div>
 
@@ -42,31 +42,31 @@
     let currentY = targetY;
     let mouseActive = false;
 
-    // Orb base configurations with noticeable drift & distinct reactive physics
+    // Subtly drifting orbs with smooth mouse interaction
     const orbs = [
       {
         el: orb1El,
-        baseXRatio: 0.2,
+        baseXRatio: 0.22,
         baseYRatio: 0.3,
-        curX: window.innerWidth * 0.2,
+        curX: window.innerWidth * 0.22,
         curY: window.innerHeight * 0.3,
-        driftRadiusX: 90,
-        driftRadiusY: 70,
-        speed: 0.0009,
+        driftRadiusX: 75,
+        driftRadiusY: 55,
+        speed: 0.0008,
         phase: 0,
-        reaction: -0.18 // Repelled strongly when mouse gets close
+        reaction: -0.12
       },
       {
         el: orb2El,
-        baseXRatio: 0.8,
-        baseYRatio: 0.55,
-        curX: window.innerWidth * 0.8,
-        curY: window.innerHeight * 0.55,
-        driftRadiusX: 110,
-        driftRadiusY: 80,
-        speed: 0.0007,
+        baseXRatio: 0.78,
+        baseYRatio: 0.58,
+        curX: window.innerWidth * 0.78,
+        curY: window.innerHeight * 0.58,
+        driftRadiusX: 90,
+        driftRadiusY: 65,
+        speed: 0.0006,
         phase: Math.PI / 1.8,
-        reaction: -0.15 // Repelled when mouse gets close
+        reaction: -0.10
       },
       {
         el: orb3El,
@@ -74,11 +74,11 @@
         baseYRatio: 0.82,
         curX: window.innerWidth * 0.5,
         curY: window.innerHeight * 0.82,
-        driftRadiusX: 80,
-        driftRadiusY: 60,
-        speed: 0.0011,
+        driftRadiusX: 65,
+        driftRadiusY: 50,
+        speed: 0.0009,
         phase: Math.PI,
-        reaction: 0.12 // Gently attracted towards cursor
+        reaction: 0.08
       }
     ];
 
@@ -105,33 +105,31 @@
     function update() {
       const time = performance.now() - startTime;
 
-      // 1. Lerp primary cursor spotlight with smooth damping (0.07 factor)
-      currentX += (targetX - currentX) * 0.07;
-      currentY += (targetY - currentY) * 0.07;
+      // Smooth lerp for primary cursor spotlight
+      currentX += (targetX - currentX) * 0.075;
+      currentY += (targetY - currentY) * 0.075;
       spotlight!.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
 
-      // 2. Update interactive floating orbs
+      // Update ambient orbs
       const winW = window.innerWidth;
       const winH = window.innerHeight;
 
       orbs.forEach((orb) => {
-        // Continuous organic base drift
         const baseX = winW * orb.baseXRatio;
         const baseY = winH * orb.baseYRatio;
         const driftX = Math.sin(time * orb.speed + orb.phase) * orb.driftRadiusX;
         const driftY = Math.cos(time * orb.speed * 0.9 + orb.phase) * orb.driftRadiusY;
 
-        // Interaction with mouse if nearby
         let interactX = 0;
         let interactY = 0;
         if (mouseActive) {
           const distX = targetX - (baseX + driftX);
           const distY = targetY - (baseY + driftY);
           const dist = Math.hypot(distX, distY);
-          const maxInfluence = 550;
+          const maxInfluence = 500;
 
           if (dist < maxInfluence) {
-            const factor = Math.pow(1 - dist / maxInfluence, 1.5);
+            const factor = Math.pow(1 - dist / maxInfluence, 1.4);
             interactX = distX * factor * orb.reaction;
             interactY = distY * factor * orb.reaction;
           }
@@ -140,9 +138,8 @@
         const destX = baseX + driftX + interactX;
         const destY = baseY + driftY + interactY;
 
-        // Smooth physical lerp to destination
-        orb.curX += (destX - orb.curX) * 0.055;
-        orb.curY += (destY - orb.curY) * 0.055;
+        orb.curX += (destX - orb.curX) * 0.05;
+        orb.curY += (destY - orb.curY) * 0.05;
 
         orb.el.style.transform = `translate3d(${orb.curX}px, ${orb.curY}px, 0)`;
       });
@@ -152,7 +149,6 @@
 
     update();
 
-    // Clean up on Astro page transition
     document.addEventListener('astro:before-swap', () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', onMouseMove);

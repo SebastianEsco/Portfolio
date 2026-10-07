@@ -9,7 +9,7 @@ const t = useTranslations(lang);
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
     
     <!-- Left: Photo Showcase with Smooth 3D Perspective Tilt & Specular Sheen (No cut-off) -->
-    <div class="lg:col-span-5 relative group">
+    <div class="lg:col-span-5 relative group scroll-reveal reveal-left">
       <!-- Soft ambient backdrop glow -->
       <div class="absolute -inset-2 bg-gradient-to-r from-accent-400/20 via-olive-700/20 to-moss-500/20 rounded-3xl blur-xl opacity-40 group-hover:opacity-75 transition duration-700 pointer-events-none"></div>
 
@@ -53,7 +53,7 @@ const t = useTranslations(lang);
     </div>
 
     <!-- Right: Editorial Typography & Micro-Stats -->
-    <div class="lg:col-span-7 flex flex-col justify-center">
+    <div class="lg:col-span-7 flex flex-col justify-center scroll-reveal reveal-right" data-delay="150">
       <!-- Section Tag -->
       <div class="flex items-center gap-3 mb-6">
         <span class="font-mono text-accent-400 text-xs tracking-widest uppercase bg-accent-400/10 px-3 py-1 rounded-md border border-accent-400/20">

@@ -67,6 +67,35 @@ const t = useTranslations(lang);
 
 			document.addEventListener('astro:page-load', initLenis);
 			initLenis();
+
+			// Scroll-driven assembly observer
+			function initScrollAssembly() {
+			  const reveals = document.querySelectorAll<HTMLElement>('.scroll-reveal');
+			  if (!reveals.length) return;
+
+			  const observer = new IntersectionObserver(
+			    (entries) => {
+			      entries.forEach((entry) => {
+			        if (entry.isIntersecting) {
+			          const el = entry.target as HTMLElement;
+			          const delay = parseInt(el.dataset.delay || '0', 10);
+			          setTimeout(() => {
+			            el.classList.add('is-revealed');
+			          }, delay);
+			          observer.unobserve(el);
+			        }
+			      });
+			    },
+			    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+			  );
+
+			  reveals.forEach((el) => observer.observe(el));
+			}
+
+			document.addEventListener('astro:page-load', initScrollAssembly);
+			if (document.readyState === 'complete' || document.readyState === 'interactive') {
+			  initScrollAssembly();
+			}
 		</script>
 	</body>
 </html>

@@ -102,12 +102,21 @@
     let animId: number;
     let startTime = performance.now();
 
+    let vx = 0;
+    let vy = 0;
+    const SPRING = 0.022; // Slower spring rate with deliberate lag
+    const DAMPING = 0.82; // Ease in and out with smooth deceleration
+
     function update() {
       const time = performance.now() - startTime;
 
-      // Smooth lerp for primary cursor spotlight
-      currentX += (targetX - currentX) * 0.075;
-      currentY += (targetY - currentY) * 0.075;
+      // Spring physics with ease-in-and-out deceleration for the cursor spotlight
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+      vx = (vx + dx * SPRING) * DAMPING;
+      vy = (vy + dy * SPRING) * DAMPING;
+      currentX += vx;
+      currentY += vy;
       spotlight!.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
 
       // Update ambient orbs

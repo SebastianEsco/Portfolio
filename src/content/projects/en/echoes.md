@@ -8,6 +8,7 @@ duration: "8 months"
 teamSize: "3 people"
 featured: true
 coverImage: "/Portfolio/images/FondoLargoEchoes.jpg"
+previewVideo: "/Portfolio/images/EchoesGif.mp4"
 youtubeId: "qE11cv0BZyQ"
 award: "Best Student Game"
 galleryImages:

@@ -126,7 +126,7 @@ const projects = allProjects.sort((a, b) => {
 </section>
 
 <script>
-  // Enhanced hover & viewport video playback for Bento cards
+  // Enhanced hover & viewport video playback for Bento cards (strictly silent)
   function initBentoVideos() {
     const cards = document.querySelectorAll<HTMLElement>('.bento-card');
 
@@ -134,8 +134,15 @@ const projects = allProjects.sort((a, b) => {
       const video = card.querySelector<HTMLVideoElement>('.bento-video');
       if (!video) return;
 
+      // Strictly mute video audio tracks
+      video.muted = true;
+      video.defaultMuted = true;
+      video.volume = 0;
+
       // Desktop hover
       card.addEventListener('mouseenter', () => {
+        video.muted = true;
+        video.volume = 0;
         video.play().catch(() => {});
       });
 
@@ -152,6 +159,8 @@ const projects = allProjects.sort((a, b) => {
           entries.forEach((entry) => {
             const video = entry.target.querySelector<HTMLVideoElement>('.bento-video');
             if (!video) return;
+            video.muted = true;
+            video.volume = 0;
             if (entry.isIntersecting) {
               video.play().catch(() => {});
               video.style.opacity = '1';

@@ -87,10 +87,8 @@ const t = useTranslations(lang);
 			        } else {
 			          // Disassembly exit when scrolling back up (while still in lower view area)
 			          if (entry.boundingClientRect.top > 0) {
-			            // Delayed revert so you visibly see them glide apart in sequence!
-			            setTimeout(() => {
-			              el.classList.remove('is-revealed');
-			            }, delay * 0.7);
+			            // Remove immediately when scrolling back up (no delay on exit)
+			            el.classList.remove('is-revealed');
 			          }
 			        }
 			      });

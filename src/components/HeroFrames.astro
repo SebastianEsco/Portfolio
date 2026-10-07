@@ -4,34 +4,45 @@ import { getLangFromUrl, useTranslations } from '../i18n/utils';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-// Pre-calculate frame paths. In public/frames/ we have 0001.jpg to 0060.jpg
+// 60 frames in public/frames/
 const frameCount = 60;
 const frames = Array.from({ length: frameCount }, (_, i) => {
-  const num = (i + 1).toString().padStart(4, '0');
+  const num = String(i + 1).padStart(4, '0');
   return `/Portfolio/frames/${num}.jpg`;
 });
 ---
 
 <section id="hero" class="relative h-[200vh] bg-forest-950">
-  <div class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center items-center">
+  <div id="hero-sticky" class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center items-center">
     
     <!-- Canvas for sequence -->
-    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen"></canvas>
+    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen will-change-transform"></canvas>
     
     <!-- Gradient overlay to tie it to the design system -->
     <div class="absolute inset-0 bg-gradient-to-b from-forest-950/40 via-forest-950/20 to-forest-950 pointer-events-none"></div>
 
-    <div class="relative z-10 text-center mt-20 px-6">
-      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-cream-100 mb-6 drop-shadow-lg tracking-tight">
+    <!-- Center Hero Title with 3D perspective response -->
+    <div id="hero-title-box" class="relative z-10 text-center mt-20 px-6 will-change-transform transition-transform duration-300 ease-out">
+      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-cream-100 mb-6 drop-shadow-2xl tracking-tight font-semibold">
         Sebastián Escobar
       </h1>
-      <p class="font-mono text-moss-500 uppercase tracking-widest text-sm md:text-base drop-shadow-md bg-forest-950/50 inline-block px-4 py-2 rounded-full border border-olive-700/50 backdrop-blur-sm">
-        {t('hero.role')} · {t('hero.location')}
+      <p class="font-mono text-moss-500 uppercase tracking-widest text-sm md:text-base drop-shadow-md bg-forest-950/60 inline-flex items-center gap-2 px-5 py-2 rounded-full border border-olive-700/60 backdrop-blur-md">
+        <span class="w-2 h-2 rounded-full bg-accent-400 animate-pulse"></span>
+        <span>{t('hero.role')} · {t('hero.location')}</span>
       </p>
     </div>
+
+    <!-- Interactive Game Telemetry HUD (Live Frame Counter) -->
+    <div id="hero-hud" class="absolute bottom-10 right-8 z-20 hidden sm:flex items-center gap-2.5 font-mono text-[11px] text-moss-500 uppercase tracking-widest bg-forest-950/80 border border-olive-700/60 px-4 py-2 rounded-full backdrop-blur-md shadow-xl pointer-events-none transition-opacity duration-300">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent-400"></span>
+      <span>RENDER // FRAME</span>
+      <span id="hud-frame" class="text-accent-400 font-bold">01</span>
+      <span class="text-olive-700">/</span>
+      <span>60</span>
+    </div>
     
-    <!-- Scroll indicator -->
-    <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-60">
+    <!-- Scroll indicator that fades out smoothly when scrolled -->
+    <div id="hero-scroll-indicator" class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-70 transition-all duration-300 pointer-events-none">
       <span class="font-mono text-xs uppercase tracking-widest text-moss-500 mb-4">{t('hero.scroll')}</span>
       <div class="w-px h-16 bg-gradient-to-b from-moss-500 to-transparent"></div>
     </div>
@@ -39,54 +50,50 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
 </section>
 
 <script define:vars={{ frames, frameCount }}>
-  // Canvas scrubber script
+  // Canvas scrubber & interactive HUD script
   function initHeroFrames() {
     const canvas = document.getElementById('hero-canvas');
+    const scrollIndicator = document.getElementById('hero-scroll-indicator');
+    const hudFrame = document.getElementById('hud-frame');
+    const heroTitle = document.getElementById('hero-title-box');
+    const heroSticky = document.getElementById('hero-sticky');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     
-    // We want the canvas internal resolution to match screen but maintain aspect ratio
     let width, height;
-    
     const loadedImages = new Array(frameCount);
     let imagesLoaded = 0;
     
-    // Resize handler
     function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
-      
-      // For high DPI screens
       const dpr = window.devicePixelRatio || 1;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
-      
       render(Math.floor(currentFrameIndex));
     }
-    
     window.addEventListener('resize', resize);
     
-    // Preload images
-    frames.forEach((src, index) => {
+    // Preload
+    frames.forEach((src, idx) => {
       const img = new Image();
+      img.src = src;
       img.onload = () => {
+        loadedImages[idx] = img;
         imagesLoaded++;
-        if (imagesLoaded === 1) {
-          resize(); // draw first frame ASAP
+        if (idx === 0) {
+          render(0);
         }
       };
-      img.src = src;
-      loadedImages[index] = img;
     });
 
-    // Draw frame covering the canvas (object-fit: cover equivalent)
+    // Render frame
     function render(index) {
-      if (index < 0) index = 0;
-      if (index >= frameCount) index = frameCount - 1;
-      
-      const img = loadedImages[index];
-      if (!img || !img.complete) return;
+      if (!ctx) return;
+      const safeIndex = Math.max(0, Math.min(frameCount - 1, index));
+      const img = loadedImages[safeIndex];
+      if (!img) return;
       
       ctx.clearRect(0, 0, width, height);
       
@@ -110,6 +117,27 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
       ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     }
 
+    // Interactive 3D Perspective Tilt on Mouse Movement
+    if (heroSticky) {
+      heroSticky.addEventListener('mousemove', (e) => {
+        const rect = heroSticky.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const tiltX = ((e.clientY - centerY) / centerY) * -3.5;
+        const tiltY = ((e.clientX - centerX) / centerX) * 3.5;
+
+        if (heroTitle) {
+          heroTitle.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        }
+      });
+
+      heroSticky.addEventListener('mouseleave', () => {
+        if (heroTitle) {
+          heroTitle.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        }
+      });
+    }
+
     // Scroll logic
     let currentFrameIndex = 0;
     const section = document.getElementById('hero');
@@ -117,14 +145,26 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
     function onScroll() {
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      // rect.top is 0 when sticky starts, going negative up to -window.innerHeight
       const scrollProgress = -rect.top / window.innerHeight;
-      
-      // Clamp between 0 and 1
       const progress = Math.max(0, Math.min(1, scrollProgress));
       
+      // 1. Smoothly fade out scroll indicator as soon as user starts scrolling
+      if (scrollIndicator) {
+        const opacity = Math.max(0, 1 - progress * 6);
+        scrollIndicator.style.opacity = (opacity * 0.7).toString();
+        scrollIndicator.style.transform = `translate(-50%, ${progress * 50}px)`;
+        scrollIndicator.style.pointerEvents = opacity <= 0.05 ? 'none' : 'auto';
+      }
+
+      // 2. Update current frame index and canvas
       currentFrameIndex = progress * (frameCount - 1);
-      render(Math.floor(currentFrameIndex));
+      const frameNum = Math.floor(currentFrameIndex);
+      render(frameNum);
+
+      // 3. Live telemetry HUD update
+      if (hudFrame) {
+        hudFrame.textContent = String(frameNum + 1).padStart(2, '0');
+      }
     }
 
     window.addEventListener('scroll', () => {

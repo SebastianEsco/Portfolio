@@ -106,22 +106,21 @@
     let message = '';
     if (isFirstVisit) {
       sessionStorage.setItem('visited_session_started', 'true');
-      const referrer = document.referrer ? `\n🔗 <b>Origen:</b> ${document.referrer}` : '';
-      const device = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? '📱 Móvil' : '💻 PC / Laptop';
+      const device = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Móvil' : 'PC / Laptop';
 
       message = 
-        `🚨 <b>¡Nuevo Visitante en el Portafolio!</b>\n` +
-        `📍 <b>Ubicación:</b> ${location}\n` +
-        `📟 <b>Dispositivo:</b> ${device}\n` +
-        `⏰ <b>Hora:</b> ${now}\n` +
-        `📄 <b>Entró a:</b> <code>${pageName}</code>` +
-        referrer;
+        `<b>[NUEVA VISITA]</b>\n` +
+        `Ubicación: ${location}\n` +
+        `Dispositivo: ${device}\n` +
+        `Hora: ${now}\n` +
+        `Página: <code>${pageName}</code>` +
+        (referrer ? `\nOrigen: ${document.referrer}` : '');
     } else {
       message = 
-        `👀 <b>Navegación</b>\n` +
-        `📍 <b>Ubicación:</b> ${location}\n` +
-        `⏰ <b>Hora:</b> ${now}\n` +
-        `📄 <b>Fue a:</b> <code>${pageName}</code>`;
+        `<b>[NAVEGACIÓN]</b>\n` +
+        `Ubicación: ${location}\n` +
+        `Hora: ${now}\n` +
+        `Página: <code>${pageName}</code>`;
     }
 
     sendTelegramNotification(message);

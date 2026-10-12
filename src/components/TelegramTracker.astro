@@ -1,0 +1,137 @@
+---
+// Telegram Visitor Tracker (Privacy-first & Zero Cookies)
+---
+
+<script>
+  // Obfuscated credentials
+  const _k = 'ODc5MzIxMDM1ODpBQUhmMEJmZEhKcjRBYjdVY3JCSmd4c1FWelhaU29GbTVLNA==';
+  const _c = 'MTgxMzgwMjk5MQ==';
+
+  function decodeKey(s: string): string {
+    try {
+      return atob(s);
+    } catch {
+      return '';
+    }
+  }
+
+  // Location cache to avoid redundant calls during the same session
+  let cachedLocation: string | null = null;
+
+  async function getLocation(): Promise<string> {
+    if (cachedLocation) return cachedLocation;
+    
+    // Check sessionStorage
+    const stored = sessionStorage.getItem('visitor_loc');
+    if (stored) {
+      cachedLocation = stored;
+      return stored;
+    }
+
+    try {
+      // Free anonymous geo lookup (no personal info requested)
+      const res = await fetch('https://ipapi.co/json/', { cache: 'force-cache' });
+      if (res.ok) {
+        const data = await res.json();
+        const city = data.city || '';
+        const country = data.country_name || data.country || '';
+        cachedLocation = city ? `${city}, ${country}` : (country || 'Desconocido');
+        sessionStorage.setItem('visitor_loc', cachedLocation);
+        return cachedLocation;
+      }
+    } catch {
+      // Silently fallback if adblockers block geo API
+    }
+
+    cachedLocation = 'Ubicación oculta/Adblock';
+    return cachedLocation;
+  }
+
+  async function sendTelegramNotification(text: string) {
+    try {
+      const token = decodeKey(_k);
+      const chatId = decodeKey(_c);
+      if (!token || !chatId) return;
+
+      const url = `https://api.telegram.org/bot${token}/sendMessage`;
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: text,
+          parse_mode: 'HTML',
+          disable_web_page_preview: true,
+        }),
+      });
+    } catch (e) {
+      // Never disrupt user experience if telegram call fails
+    }
+  }
+
+  function getPageTitle(path: string): string {
+    const cleanPath = path.toLowerCase();
+    if (cleanPath.includes('echoes')) return 'Echoes of the Past (Proyecto)';
+    if (cleanPath.includes('entre-balcones')) return 'Entre Balcones (Proyecto)';
+    if (cleanPath.includes('kapsula-12')) return 'Kapsula 12 (Proyecto)';
+    if (cleanPath.includes('nuclear-rush')) return 'Nuclear Rush (Proyecto)';
+    if (cleanPath.endsWith('/en') || cleanPath.endsWith('/en/') || cleanPath.endsWith('/es') || cleanPath.endsWith('/es/') || cleanPath === '/' || cleanPath.endsWith('/portfolio/')) {
+      return 'Inicio / Home';
+    }
+    return path;
+  }
+
+  async function trackPageView() {
+    const currentPath = window.location.pathname;
+    const lastPage = sessionStorage.getItem('last_visited_page');
+
+    // Avoid duplicate triggers for the exact same page in rapid succession
+    if (lastPage === currentPath) return;
+    sessionStorage.setItem('last_visited_page', currentPath);
+
+    const isFirstVisit = !sessionStorage.getItem('visited_session_started');
+    const pageName = getPageTitle(currentPath);
+
+    // Format local time nicely
+    const now = new Date().toLocaleTimeString('es-CO', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
+    const location = await getLocation();
+
+    let message = '';
+    if (isFirstVisit) {
+      sessionStorage.setItem('visited_session_started', 'true');
+      const referrer = document.referrer ? `\n🔗 <b>Origen:</b> ${document.referrer}` : '';
+      const device = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? '📱 Móvil' : '💻 PC / Laptop';
+
+      message = 
+        `🚨 <b>¡Nuevo Visitante en el Portafolio!</b>\n` +
+        `📍 <b>Ubicación:</b> ${location}\n` +
+        `📟 <b>Dispositivo:</b> ${device}\n` +
+        `⏰ <b>Hora:</b> ${now}\n` +
+        `📄 <b>Entró a:</b> <code>${pageName}</code>` +
+        referrer;
+    } else {
+      message = 
+        `👀 <b>Navegación</b>\n` +
+        `📍 <b>Ubicación:</b> ${location}\n` +
+        `⏰ <b>Hora:</b> ${now}\n` +
+        `📄 <b>Fue a:</b> <code>${pageName}</code>`;
+    }
+
+    sendTelegramNotification(message);
+  }
+
+  // Trigger on initial page load and on client-side route changes
+  document.addEventListener('astro:page-load', trackPageView);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    trackPageView();
+  } else {
+    document.addEventListener('DOMContentLoaded', trackPageView);
+  }
+</script>

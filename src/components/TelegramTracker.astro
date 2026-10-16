@@ -21,29 +21,43 @@
   async function getLocation(): Promise<string> {
     if (cachedLocation) return cachedLocation;
     
-    // Check sessionStorage
-    const stored = sessionStorage.getItem('visitor_loc');
-    if (stored) {
-      cachedLocation = stored;
-      return stored;
-    }
-
+    // Check sessionStorage first
     try {
-      // Free anonymous geo lookup (no personal info requested)
-      const res = await fetch('https://ipapi.co/json/', { cache: 'force-cache' });
+      const stored = sessionStorage.getItem('visitor_loc');
+      if (stored) {
+        cachedLocation = stored;
+        return stored;
+      }
+    } catch {}
+
+    // Use ipwho.is with timeout fallback
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+      const res = await fetch('https://ipwho.is/', {
+        signal: controller.signal,
+        cache: 'force-cache'
+      });
+      clearTimeout(timeoutId);
+
       if (res.ok) {
         const data = await res.json();
-        const city = data.city || '';
-        const country = data.country_name || data.country || '';
-        cachedLocation = city ? `${city}, ${country}` : (country || 'Desconocido');
-        sessionStorage.setItem('visitor_loc', cachedLocation);
-        return cachedLocation;
+        if (data && data.success !== false) {
+          const city = data.city || '';
+          const country = data.country || '';
+          cachedLocation = city ? `${city}, ${country}` : (country || 'Desconocido');
+          try {
+            sessionStorage.setItem('visitor_loc', cachedLocation);
+          } catch {}
+          return cachedLocation;
+        }
       }
     } catch {
-      // Silently fallback if adblockers block geo API
+      // Silently continue if blocked or timeout
     }
 
-    cachedLocation = 'Ubicación oculta/Adblock';
+    cachedLocation = 'Ubicación no disponible';
     return cachedLocation;
   }
 
@@ -66,8 +80,8 @@
           disable_web_page_preview: true,
         }),
       });
-    } catch (e) {
-      // Never disrupt user experience if telegram call fails
+    } catch {
+      // Never disrupt user experience
     }
   }
 
@@ -83,51 +97,67 @@
     return path;
   }
 
+  let isTracking = false;
+
   async function trackPageView() {
-    const currentPath = window.location.pathname;
-    const lastPage = sessionStorage.getItem('last_visited_page');
+    if (isTracking) return;
+    isTracking = true;
 
-    // Avoid duplicate triggers for the exact same page in rapid succession
-    if (lastPage === currentPath) return;
-    sessionStorage.setItem('last_visited_page', currentPath);
+    try {
+      const currentPath = window.location.pathname;
+      const lastPage = sessionStorage.getItem('last_visited_page');
 
-    const isFirstVisit = !sessionStorage.getItem('visited_session_started');
-    const pageName = getPageTitle(currentPath);
+      // Avoid duplicate triggers for the exact same page in rapid succession
+      if (lastPage === currentPath) {
+        isTracking = false;
+        return;
+      }
+      sessionStorage.setItem('last_visited_page', currentPath);
 
-    // Format local time nicely
-    const now = new Date().toLocaleTimeString('es-CO', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
+      const isFirstVisit = !sessionStorage.getItem('visited_session_started');
+      const pageName = getPageTitle(currentPath);
 
-    const location = await getLocation();
+      // Format local time nicely
+      const now = new Date().toLocaleTimeString('es-CO', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
 
-    let message = '';
-    if (isFirstVisit) {
-      sessionStorage.setItem('visited_session_started', 'true');
-      const device = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Móvil' : 'PC / Laptop';
+      const location = await getLocation();
 
-      message = 
-        `<b>[NUEVA VISITA]</b>\n` +
-        `Ubicación: ${location}\n` +
-        `Dispositivo: ${device}\n` +
-        `Hora: ${now}\n` +
-        `Página: <code>${pageName}</code>` +
-        (referrer ? `\nOrigen: ${document.referrer}` : '');
-    } else {
-      message = 
-        `<b>[NAVEGACIÓN]</b>\n` +
-        `Ubicación: ${location}\n` +
-        `Hora: ${now}\n` +
-        `Página: <code>${pageName}</code>`;
+      let message = '';
+      if (isFirstVisit) {
+        sessionStorage.setItem('visited_session_started', 'true');
+        const device = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Móvil' : 'PC / Laptop';
+        const ref = document.referrer ? `\nOrigen: ${document.referrer}` : '';
+
+        message = 
+          `<b>[NUEVA VISITA]</b>\n` +
+          `Ubicación: ${location}\n` +
+          `Dispositivo: ${device}\n` +
+          `Hora: ${now}\n` +
+          `Página: <code>${pageName}</code>` +
+          ref;
+      } else {
+        message = 
+          `<b>[NAVEGACIÓN]</b>\n` +
+          `Ubicación: ${location}\n` +
+          `Hora: ${now}\n` +
+          `Página: <code>${pageName}</code>`;
+      }
+
+      await sendTelegramNotification(message);
+    } catch {
+      // Safe fallback
+    } finally {
+      isTracking = false;
     }
-
-    sendTelegramNotification(message);
   }
 
-  // Trigger on initial page load and on client-side route changes
+  // Trigger on initial page load AND on every Astro ClientRouter transition
   document.addEventListener('astro:page-load', trackPageView);
+
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     trackPageView();
   } else {

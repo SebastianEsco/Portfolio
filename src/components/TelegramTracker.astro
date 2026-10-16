@@ -85,6 +85,62 @@
     }
   }
 
+  function getOriginInfo(): string {
+    try {
+      // 1. Check URL parameters (?ref=..., ?utm_source=..., ?from=...)
+      const params = new URLSearchParams(window.location.search);
+      const customRef = params.get('ref') || params.get('from') || params.get('utm_source');
+
+      if (customRef) {
+        const cleanRef = customRef.toLowerCase().trim();
+        const mapping: Record<string, string> = {
+          'cv': 'CV / Currículum',
+          'resume': 'CV / Currículum',
+          'linkedin': 'LinkedIn',
+          'github': 'GitHub',
+          'whatsapp': 'WhatsApp',
+          'twitter': 'Twitter / X',
+          'x': 'Twitter / X',
+          'instagram': 'Instagram',
+          'mail': 'Correo / Email',
+          'email': 'Correo / Email',
+          'itch': 'Itch.io',
+          'itchio': 'Itch.io',
+        };
+        const friendlyName = mapping[cleanRef] || customRef;
+        // Persist origin in session so subsequent page views retain origin context if desired
+        try { sessionStorage.setItem('visitor_origin', friendlyName); } catch {}
+        return friendlyName;
+      }
+
+      // Check if previously recorded in session
+      try {
+        const storedOrigin = sessionStorage.getItem('visitor_origin');
+        if (storedOrigin) return storedOrigin;
+      } catch {}
+
+      // 2. Check document.referrer
+      if (document.referrer) {
+        const refUrl = new URL(document.referrer);
+        const host = refUrl.hostname.toLowerCase();
+
+        // If referrer is from your own portfolio, don't show it as external origin
+        if (host === window.location.hostname) return '';
+
+        if (host.includes('linkedin')) return 'LinkedIn';
+        if (host.includes('github')) return 'GitHub';
+        if (host.includes('t.co') || host.includes('twitter') || host.includes('x.com')) return 'Twitter / X';
+        if (host.includes('instagram')) return 'Instagram';
+        if (host.includes('facebook')) return 'Facebook';
+        if (host.includes('google')) return 'Búsqueda Google';
+
+        return document.referrer;
+      }
+    } catch {}
+
+    return 'Directo / Desconocido';
+  }
+
   function getPageTitle(path: string): string {
     const cleanPath = path.toLowerCase();
     if (cleanPath.includes('echoes')) return 'Echoes of the Past (Proyecto)';
@@ -130,15 +186,15 @@
       if (isFirstVisit) {
         sessionStorage.setItem('visited_session_started', 'true');
         const device = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Móvil' : 'PC / Laptop';
-        const ref = document.referrer ? `\nOrigen: ${document.referrer}` : '';
+        const origin = getOriginInfo();
 
         message = 
           `<b>[NUEVA VISITA]</b>\n` +
           `Ubicación: ${location}\n` +
           `Dispositivo: ${device}\n` +
           `Hora: ${now}\n` +
-          `Página: <code>${pageName}</code>` +
-          ref;
+          `Origen: ${origin}\n` +
+          `Página: <code>${pageName}</code>`;
       } else {
         message = 
           `<b>[NAVEGACIÓN]</b>\n` +

@@ -45,10 +45,10 @@ const skillGroups = [
     <span>TECH_STACK // CAPABILITIES</span>
   </div>
 
-  <!-- Brutalist Modular Matrix -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-l border-olive-700">
+  <!-- Brutalist Modular Matrix with Rock-Solid Hairline Borders -->
+  <div class="border border-olive-700 bg-olive-700 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px overflow-hidden">
     {skillGroups.map((group, index) => (
-      <div class="border-r border-b border-olive-700 bg-forest-950 hover:bg-forest-900/80 transition-colors p-6 md:p-8 flex flex-col justify-between scroll-reveal reveal-up" data-delay={index * 80}>
+      <div class="bg-forest-950 hover:bg-forest-900/90 transition-colors p-6 md:p-8 flex flex-col justify-between scroll-reveal reveal-up" data-delay={index * 80}>
         <div>
           <div class="flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-moss-500 uppercase mb-6 pb-3 border-b border-olive-700">
             <span>{group.code}</span>

@@ -4,6 +4,7 @@ year: 2025
 platform: "Meta Quest"
 engine: "Unity + Meta SDK"
 role: "Programador VR Principal"
+duration: "4 meses"
 teamSize: "5 personas"
 featured: true
 coverImage: "/Portfolio/images/balconesGalery.jpg"

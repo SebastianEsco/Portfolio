@@ -4,8 +4,8 @@ year: 2025
 platform: "PC"
 engine: "Unity URP"
 role: "Lead Developer"
-duration: "8 months"
-teamSize: "3 people"
+duration: "3 months"
+teamSize: "8 people"
 featured: true
 coverImage: "/Portfolio/images/EchoesGalery1.jpg"
 previewVideo: "/Portfolio/images/EchoesGif.mp4"
@@ -33,7 +33,7 @@ The game's nostalgic and carefully crafted visual style is supported by strong e
 
 Players encounter musical, visual, logic, and spatial puzzles, all integrated into the environment through exploration. The story is non-linear and revealed through cinematic moments, audio triggers, and object interactions, creating a layered narrative experience.
 
-The development process lasted 4 months, from concept to final build. The team used weekly Scrum-based sprints to stay organized and focused. The biggest challenge was achieving a high-quality visual finish while maintaining optimal performance with real-time lighting, high-resolution textures, post-processing, and detailed 3D models. We invested time learning and applying techniques like GPU instancing, occlusion culling, and efficient scene management to ensure a smooth experience.
+The development process lasted 3 months, from concept to final build. The team used weekly Scrum-based sprints to stay organized and focused. The biggest challenge was achieving a high-quality visual finish while maintaining optimal performance with real-time lighting, high-resolution textures, post-processing, and detailed 3D models. We invested time learning and applying techniques like GPU instancing, occlusion culling, and efficient scene management to ensure a smooth experience.
 
 ---
 

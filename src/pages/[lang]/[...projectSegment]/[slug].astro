@@ -110,11 +110,26 @@ const { Content } = await render(project);
 
     <!-- Asymmetric Editorial 2-Column Case Study Breakdown -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 scroll-reveal reveal-up" data-delay="140">
-      <div class="lg:col-span-4 font-mono text-xs uppercase tracking-[0.2em] text-moss-500 lg:sticky lg:top-28 h-fit border-l-2 border-accent-400 pl-4 space-y-2">
-        <div class="text-cream-100 font-bold">TECHNICAL OVERVIEW</div>
-        <div>ARCHITECTURE &amp; DESIGN</div>
-        {project.data.duration && <div>DURATION: {project.data.duration}</div>}
-        {project.data.teamSize && <div>TEAM: {project.data.teamSize}</div>}
+      <div class="lg:col-span-4 font-mono text-xs uppercase tracking-[0.18em] text-moss-500 lg:sticky lg:top-28 h-fit border-l-2 border-accent-400 pl-4 space-y-4">
+        <div>
+          <div class="text-[10px] text-accent-400 mb-0.5">// {lang === 'es' ? 'FICHA TÉCNICA' : 'TECHNICAL SPEC'}</div>
+          <div class="text-cream-100 font-bold text-sm tracking-wide">{project.data.title}</div>
+        </div>
+
+        <div class="space-y-2 border-t border-olive-700/60 pt-3 text-[11px]">
+          <div><span class="text-moss-500/80">{lang === 'es' ? 'ROL:' : 'ROLE:'}</span> <strong class="text-cream-100">{project.data.role}</strong></div>
+          <div><span class="text-moss-500/80">{lang === 'es' ? 'MOTOR:' : 'ENGINE:'}</span> <strong class="text-cream-100">{project.data.engine}</strong></div>
+          <div><span class="text-moss-500/80">{lang === 'es' ? 'PLATAFORMA:' : 'PLATFORM:'}</span> <strong class="text-cream-100">{project.data.platform}</strong></div>
+          {project.data.duration && (
+            <div><span class="text-moss-500/80">{lang === 'es' ? 'DURACIÓN:' : 'DURATION:'}</span> <strong class="text-cream-100">{project.data.duration}</strong></div>
+          )}
+          {project.data.teamSize && (
+            <div><span class="text-moss-500/80">{lang === 'es' ? 'EQUIPO:' : 'TEAM SIZE:'}</span> <strong class="text-cream-100">{project.data.teamSize}</strong></div>
+          )}
+          {project.data.award && (
+            <div class="text-accent-400 font-bold pt-1">★ {project.data.award}</div>
+          )}
+        </div>
       </div>
 
       <div class="lg:col-span-8 prose prose-invert prose-p:text-cream-300 prose-p:leading-relaxed prose-headings:text-cream-100 prose-headings:font-display prose-headings:uppercase prose-headings:tracking-tight prose-headings:font-extrabold prose-a:text-accent-400 prose-strong:text-cream-100 prose-hr:border-olive-700 max-w-none prose-lg">

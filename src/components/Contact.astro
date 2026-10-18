@@ -17,30 +17,30 @@ const t = useTranslations(lang);
   </div>
 
   <!-- Brutalist Editorial Contact Block -->
-  <div class="corner-brackets bg-forest-900 border border-olive-700 p-8 sm:p-12 md:p-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-end scroll-reveal reveal-up">
+  <div class="corner-brackets bg-forest-900 border border-olive-700 p-8 sm:p-12 md:p-16 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10 scroll-reveal reveal-up">
     
-    <div class="lg:col-span-8">
+    <div class="max-w-2xl">
       <div class="inline-flex items-center gap-2.5 bg-forest-950 border border-olive-700 px-3 py-1 mb-6 font-mono text-[10px] uppercase tracking-[0.22em] text-accent-400">
         <span class="w-1.5 h-1.5 bg-accent-400"></span>
         <span>{lang === 'es' ? 'CANAL ABIERTO · RESPUESTA RÁPIDA' : 'OPEN CHANNEL · DIRECT INQUIRIES'}</span>
       </div>
 
-      <h3 class="font-display text-5xl sm:text-7xl md:text-8xl text-cream-100 font-extrabold uppercase tracking-tighter leading-[0.88] mb-6">
+      <h3 class="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-cream-100 font-extrabold uppercase tracking-tighter leading-[0.9] mb-6">
         {t('contact.title')}
       </h3>
 
-      <p class="font-sans text-lg sm:text-xl text-cream-300 max-w-xl">
+      <p class="font-sans text-base sm:text-lg md:text-xl text-cream-300">
         {t('contact.text')}
       </p>
     </div>
 
-    <div class="lg:col-span-4 flex flex-col gap-4 w-full">
+    <div class="flex flex-col gap-3.5 w-full lg:w-auto lg:min-w-[340px] shrink-0">
       <a 
-        href="mailto:s.escobarmejia@gmail.com" 
-        class="group flex items-center justify-between px-6 py-5 bg-accent-400 text-forest-950 font-mono text-xs uppercase tracking-[0.2em] font-bold hover:bg-cream-100 transition-colors w-full"
+        href="mailto:Sebastian.escobarm1@gmail.com" 
+        class="group flex items-center justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5 bg-accent-400 text-forest-950 font-mono text-xs uppercase tracking-[0.16em] font-bold hover:bg-cream-100 transition-colors w-full"
       >
-        <span>s.escobarmejia@gmail.com</span>
-        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <span class="truncate">Sebastian.escobarm1@gmail.com</span>
+        <svg class="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M5 12h14M12 5l7 7-7 7"/>
         </svg>
       </a>
@@ -48,10 +48,10 @@ const t = useTranslations(lang);
       <a 
         href={lang === 'es' ? '/Portfolio/cv/SebastianEscobar_CV_ES.pdf' : '/Portfolio/cv/SebastianEscobar_CV_EN.pdf'}
         target="_blank"
-        class="group flex items-center justify-between px-6 py-5 bg-forest-950 border border-olive-700 text-cream-100 font-mono text-xs uppercase tracking-[0.2em] font-semibold hover:border-accent-400 hover:text-accent-400 transition-colors w-full"
+        class="group flex items-center justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5 bg-forest-950 border border-olive-700 text-cream-100 font-mono text-xs uppercase tracking-[0.16em] font-semibold hover:border-accent-400 hover:text-accent-400 transition-colors w-full"
       >
         <span>{lang === 'es' ? t('contact.cvEs') : t('contact.cvEn')}</span>
-        <svg class="w-4 h-4 group-hover:translate-y-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="w-4 h-4 shrink-0 group-hover:translate-y-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
         </svg>
       </a>

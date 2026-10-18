@@ -60,6 +60,13 @@ const t = useTranslations(lang);
 			    smoothTouch: false,
 			    touchMultiplier: 2,
 			  });
+
+			  // If there's no anchor hash, force window and Lenis to scroll to the top of the page
+			  if (!window.location.hash) {
+			    lenis.scrollTo(0, { immediate: true });
+			    window.scrollTo(0, 0);
+			  }
+
 			  function raf(time: number) {
 			    lenis?.raf(time);
 			    requestAnimationFrame(raf);

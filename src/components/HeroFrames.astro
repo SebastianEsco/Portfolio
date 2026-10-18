@@ -12,49 +12,74 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
 });
 ---
 
-<section id="hero" class="relative h-[200vh] bg-forest-950">
-  <div id="hero-sticky" class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center items-center">
+<section id="hero" class="relative h-[200vh] bg-forest-950 border-b border-olive-700">
+  <div id="hero-sticky" class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between p-6 md:p-12 pt-24">
     
     <!-- Canvas for sequence -->
-    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen will-change-transform"></canvas>
+    <canvas id="hero-canvas" class="absolute inset-0 w-full h-full object-cover opacity-75 will-change-transform"></canvas>
     
-    <!-- Gradient overlay to tie it to the design system -->
-    <div class="absolute inset-0 bg-gradient-to-b from-forest-950/40 via-forest-950/20 to-forest-950 pointer-events-none"></div>
+    <!-- Architectural Vignette & Contrast Gradient -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(10,11,10,0.85)_100%)] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-forest-950 via-transparent to-forest-950/60 pointer-events-none"></div>
 
-    <!-- Center Hero Title with 3D perspective response -->
-    <div id="hero-title-box" class="relative z-10 text-center mt-20 px-6 will-change-transform transition-transform duration-300 ease-out">
-      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-cream-100 mb-6 drop-shadow-2xl tracking-tight font-semibold">
-        Sebastián Escobar
+    <!-- Viewport Corner Crosshairs -->
+    <div class="relative z-20 flex justify-between items-start pointer-events-none font-mono text-[10px] tracking-[0.22em] text-cream-300/80 uppercase">
+      <div class="flex flex-col gap-1 border-l-2 border-accent-400 pl-3">
+        <span class="text-accent-400 font-bold">CAM_01 // ISOMETRIC_VIEWPORT</span>
+        <span>UNITY_ENGINE · UNREAL_5 · META_XR</span>
+      </div>
+      <div class="hidden sm:flex flex-col items-end gap-1 border-r-2 border-olive-700 pr-3">
+        <span>STATUS: <strong class="text-cream-100">ONLINE</strong></span>
+        <span>LOC: MEDELLÍN, COLOMBIA</span>
+      </div>
+    </div>
+
+    <!-- Center / Editorial Asymmetric Hero Lockup -->
+    <div id="hero-title-box" class="relative z-10 my-auto max-w-[1440px] w-full mx-auto will-change-transform transition-transform duration-300 ease-out">
+      <div class="inline-flex items-center gap-3 bg-forest-950/90 border border-olive-700 px-3.5 py-1.5 mb-5">
+        <span class="w-2 h-2 bg-accent-400"></span>
+        <span class="font-mono text-[11px] uppercase tracking-[0.25em] text-cream-100 font-semibold">
+          {t('hero.role')} // {t('hero.location')}
+        </span>
+      </div>
+
+      <h1 class="font-display text-5xl sm:text-7xl md:text-8xl lg:text-[7.2rem] text-cream-100 font-extrabold uppercase tracking-tighter leading-[0.88] drop-shadow-2xl">
+        SEBASTIÁN<br/>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cream-100 via-cream-100 to-moss-500">ESCOBAR</span><span class="text-accent-400">.</span>
       </h1>
-      <p class="font-mono text-moss-500 uppercase tracking-widest text-sm md:text-base drop-shadow-md bg-forest-950/60 inline-flex items-center gap-2 px-5 py-2 rounded-full border border-olive-700/60 backdrop-blur-md">
-        <span class="w-2 h-2 rounded-full bg-accent-400 animate-pulse"></span>
-        <span>{t('hero.role')} · {t('hero.location')}</span>
-      </p>
     </div>
 
-    <!-- Interactive Game Telemetry HUD (Live Frame Counter) -->
-    <div id="hero-hud" class="absolute bottom-10 right-8 z-20 hidden sm:flex items-center gap-2.5 font-mono text-[11px] text-moss-500 uppercase tracking-widest bg-forest-950/80 border border-olive-700/60 px-4 py-2 rounded-full backdrop-blur-md shadow-xl pointer-events-none transition-opacity duration-300">
-      <span class="w-1.5 h-1.5 rounded-full bg-accent-400"></span>
-      <span>RENDER // FRAME</span>
-      <span id="hud-frame" class="text-accent-400 font-bold">01</span>
-      <span class="text-olive-700">/</span>
-      <span>60</span>
+    <!-- Bottom HUD Bar: Scroll Indicator + Frame Scrubbing Telemetry -->
+    <div class="relative z-20 flex justify-between items-end border-t border-olive-700/80 pt-4 font-mono text-[11px] uppercase tracking-[0.2em]">
+      <!-- Scroll Indicator -->
+      <div id="hero-scroll-indicator" class="flex items-center gap-3 text-cream-100 transition-all duration-300 pointer-events-none">
+        <span class="inline-block w-1.5 h-4 bg-accent-400 animate-bounce"></span>
+        <span>[ {t('hero.scroll')} TO SCRUB TIMELINE ]</span>
+      </div>
+
+      <!-- Frame Telemetry Counter -->
+      <div id="hero-hud" class="flex items-center gap-4 bg-forest-950/90 border border-olive-700 px-4 py-2 pointer-events-none">
+        <span class="text-moss-500 hidden sm:inline">TIMELINE_BUFFER</span>
+        <div class="w-20 h-1.5 bg-olive-700 overflow-hidden hidden md:block">
+          <div id="hud-progress-bar" class="h-full bg-accent-400 w-[2%]"></div>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-moss-500">FRM</span>
+          <span id="hud-frame" class="text-accent-400 font-bold text-xs">01</span>
+          <span class="text-moss-500">/60</span>
+        </div>
+      </div>
     </div>
-    
-    <!-- Scroll indicator that fades out smoothly when scrolled -->
-    <div id="hero-scroll-indicator" class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-70 transition-all duration-300 pointer-events-none">
-      <span class="font-mono text-xs uppercase tracking-widest text-moss-500 mb-4">{t('hero.scroll')}</span>
-      <div class="w-px h-16 bg-gradient-to-b from-moss-500 to-transparent"></div>
-    </div>
+
   </div>
 </section>
 
 <script define:vars={{ frames, frameCount }}>
-  // Canvas scrubber & interactive HUD script
   function initHeroFrames() {
     const canvas = document.getElementById('hero-canvas');
     const scrollIndicator = document.getElementById('hero-scroll-indicator');
     const hudFrame = document.getElementById('hud-frame');
+    const hudProgressBar = document.getElementById('hud-progress-bar');
     const heroTitle = document.getElementById('hero-title-box');
     const heroSticky = document.getElementById('hero-sticky');
     if (!canvas) return;
@@ -62,7 +87,6 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
     
     let width, height;
     const loadedImages = new Array(frameCount);
-    let imagesLoaded = 0;
     
     function resize() {
       width = window.innerWidth;
@@ -81,7 +105,6 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
       img.src = src;
       img.onload = () => {
         loadedImages[idx] = img;
-        imagesLoaded++;
         if (idx === 0) {
           render(0);
         }
@@ -117,14 +140,14 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
       ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     }
 
-    // Interactive 3D Perspective Tilt on Mouse Movement
+    // Subtle 3D Perspective Tilt on Mouse Movement
     if (heroSticky) {
       heroSticky.addEventListener('mousemove', (e) => {
         const rect = heroSticky.getBoundingClientRect();
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        const tiltX = ((e.clientY - centerY) / centerY) * -3.5;
-        const tiltY = ((e.clientX - centerX) / centerX) * 3.5;
+        const tiltX = ((e.clientY - centerY) / centerY) * -2.5;
+        const tiltY = ((e.clientX - centerX) / centerX) * 2.5;
 
         if (heroTitle) {
           heroTitle.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
@@ -151,9 +174,8 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
       // 1. Smoothly fade out scroll indicator as soon as user starts scrolling
       if (scrollIndicator) {
         const opacity = Math.max(0, 1 - progress * 6);
-        scrollIndicator.style.opacity = (opacity * 0.7).toString();
-        scrollIndicator.style.transform = `translate(-50%, ${progress * 50}px)`;
-        scrollIndicator.style.pointerEvents = opacity <= 0.05 ? 'none' : 'auto';
+        scrollIndicator.style.opacity = opacity.toString();
+        scrollIndicator.style.transform = `translateY(${progress * 20}px)`;
       }
 
       // 2. Update current frame index and canvas
@@ -165,13 +187,15 @@ const frames = Array.from({ length: frameCount }, (_, i) => {
       if (hudFrame) {
         hudFrame.textContent = String(frameNum + 1).padStart(2, '0');
       }
+      if (hudProgressBar) {
+        hudProgressBar.style.width = `${Math.max(2, ((frameNum + 1) / frameCount) * 100)}%`;
+      }
     }
 
     window.addEventListener('scroll', () => {
       requestAnimationFrame(onScroll);
     }, { passive: true });
     
-    // Initialize
     resize();
     onScroll();
   }

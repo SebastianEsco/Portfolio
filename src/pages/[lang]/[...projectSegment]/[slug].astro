@@ -12,7 +12,6 @@ export async function getStaticPaths() {
 
   for (const lang of langs) {
     const langProjects = projects.filter(p => p.id.startsWith(`${lang}/`));
-    // Sort projects: Echoes first, then by year
     const sortedProjects = [...langProjects].sort((a, b) => {
       const isEchoesA = a.id.includes('echoes');
       const isEchoesB = b.id.includes('echoes');
@@ -46,139 +45,167 @@ const { Content } = await render(project);
 ---
 
 <BaseLayout title={`${project.data.title} · Sebastián Escobar`} description={project.data.title}>
-  <article class="pt-32 pb-24 px-6 md:px-12 max-w-4xl mx-auto">
+  <article class="pt-28 pb-28 px-6 md:px-12 max-w-[1360px] mx-auto">
     
-    <!-- Top breadcrumb / navigation -->
-    <div class="mb-12 scroll-reveal reveal-up">
-      <a href={homeUrl(lang, '#work')} class="inline-flex items-center text-moss-500 font-sans text-sm hover:text-cream-100 transition-colors mb-8 group">
-        <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-        {t('project.back')}
+    <!-- Top Architectural Breadcrumb Bar -->
+    <div class="flex items-center justify-between border-b border-olive-700 pb-4 mb-12 font-mono text-xs uppercase tracking-[0.2em] scroll-reveal reveal-up">
+      <a href={homeUrl(lang, '#work')} class="inline-flex items-center text-cream-100 hover:text-accent-400 transition-colors group">
+        <span class="text-accent-400 mr-2 group-hover:-translate-x-1 transition-transform">←</span>
+        <span>[{t('project.back')}]</span>
       </a>
-      
-      <div class="flex items-center gap-3 mb-4 flex-wrap">
-        {project.data.award && (
-          <span class="px-2.5 py-1 bg-rust-500 text-cream-100 text-[10px] uppercase tracking-widest font-mono rounded-md shadow-sm">
-            ★ {project.data.award}
-          </span>
-        )}
-      </div>
+      <span class="text-moss-500">CASE_STUDY // {project.data.year}</span>
+    </div>
 
-      <h1 class="font-display text-4xl sm:text-6xl md:text-7xl text-cream-100 font-semibold tracking-tight mb-8">
-        {project.data.title}
+    <!-- Editorial Project Header -->
+    <div class="mb-14 scroll-reveal reveal-up">
+      {project.data.award && (
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-accent-400 text-forest-950 font-mono text-[11px] font-bold uppercase tracking-[0.2em] mb-6">
+          <span>★ {project.data.award}</span>
+        </div>
+      )}
+
+      <h1 class="font-display text-5xl sm:text-7xl md:text-8xl text-cream-100 font-extrabold uppercase tracking-tighter leading-[0.88] mb-12">
+        {project.data.title}<span class="text-accent-400">.</span>
       </h1>
       
-      {/* Meta detail grid */}
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs uppercase tracking-wider text-moss-500 border-y border-olive-700/40 py-5 bg-forest-900/40 rounded-xl px-5">
-        <div>
-          <span class="text-moss-500/70 block mb-1">{t('project.year')}</span>
-          <strong class="text-cream-100 font-medium text-sm">{project.data.year}</strong>
+      <!-- Exposed Hairline Spec Sheet Table -->
+      <div class="grid grid-cols-2 md:grid-cols-4 border border-olive-700 bg-forest-900/70 divide-y md:divide-y-0 divide-x divide-olive-700 font-mono">
+        <div class="p-5">
+          <span class="text-moss-500 text-[10px] uppercase tracking-[0.2em] block mb-1.5">// {t('project.year')}</span>
+          <strong class="text-cream-100 font-bold text-sm uppercase tracking-wider">{project.data.year}</strong>
         </div>
-        <div>
-          <span class="text-moss-500/70 block mb-1">{t('project.platform')}</span>
-          <strong class="text-cream-100 font-medium text-sm">{project.data.platform}</strong>
+        <div class="p-5">
+          <span class="text-moss-500 text-[10px] uppercase tracking-[0.2em] block mb-1.5">// {t('project.platform')}</span>
+          <strong class="text-cream-100 font-bold text-sm uppercase tracking-wider">{project.data.platform}</strong>
         </div>
-        <div>
-          <span class="text-moss-500/70 block mb-1">{t('project.engine')}</span>
-          <strong class="text-cream-100 font-medium text-sm">{project.data.engine}</strong>
+        <div class="p-5">
+          <span class="text-moss-500 text-[10px] uppercase tracking-[0.2em] block mb-1.5">// {t('project.engine')}</span>
+          <strong class="text-cream-100 font-bold text-sm uppercase tracking-wider">{project.data.engine}</strong>
         </div>
-        <div>
-          <span class="text-moss-500/70 block mb-1">{t('project.role')}</span>
-          <strong class="text-cream-100 font-medium text-sm">{project.data.role}</strong>
+        <div class="p-5">
+          <span class="text-moss-500 text-[10px] uppercase tracking-[0.2em] block mb-1.5">// {t('project.role')}</span>
+          <strong class="text-accent-400 font-bold text-sm uppercase tracking-wider">{project.data.role}</strong>
         </div>
       </div>
     </div>
     
-    {/* YouTube Video trailer */}
+    <!-- Wide Cinema Viewport for YouTube Trailer -->
     {project.data.youtubeId && (
-      <div class="aspect-video w-full rounded-2xl overflow-hidden bg-forest-900 border border-olive-700/60 mb-16 shadow-2xl relative scroll-reveal reveal-up" data-delay="100">
-         <iframe 
+      <div class="corner-brackets w-full bg-forest-900 border border-olive-700 mb-20 shadow-2xl relative scroll-reveal reveal-up" data-delay="100">
+        <div class="flex items-center justify-between px-4 py-2 bg-forest-950 border-b border-olive-700 font-mono text-[10px] uppercase tracking-[0.2em] text-moss-500">
+          <span>VIDEO_STREAM // TRAILER_CAPTURE</span>
+          <span class="text-accent-400">1080P_60FPS</span>
+        </div>
+        <div class="aspect-video w-full">
+          <iframe 
             class="w-full h-full" 
             src={`https://www.youtube.com/embed/${project.data.youtubeId}?autoplay=0&rel=0`} 
             title="Project Trailer" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
             allowfullscreen>
-         </iframe>
+          </iframe>
+        </div>
       </div>
     )}
 
-    {/* Prose Content */}
-    <div class="prose prose-invert prose-p:text-cream-300 prose-p:leading-relaxed prose-headings:text-cream-100 prose-headings:font-display prose-headings:tracking-tight prose-a:text-accent-400 prose-strong:text-cream-100 max-w-none prose-lg scroll-reveal reveal-up" data-delay="150">
-      <Content />
+    <!-- Asymmetric Editorial 2-Column Case Study Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 scroll-reveal reveal-up" data-delay="140">
+      <div class="lg:col-span-4 font-mono text-xs uppercase tracking-[0.2em] text-moss-500 lg:sticky lg:top-28 h-fit border-l-2 border-accent-400 pl-4 space-y-2">
+        <div class="text-cream-100 font-bold">TECHNICAL OVERVIEW</div>
+        <div>ARCHITECTURE &amp; DESIGN</div>
+        {project.data.duration && <div>DURATION: {project.data.duration}</div>}
+        {project.data.teamSize && <div>TEAM: {project.data.teamSize}</div>}
+      </div>
+
+      <div class="lg:col-span-8 prose prose-invert prose-p:text-cream-300 prose-p:leading-relaxed prose-headings:text-cream-100 prose-headings:font-display prose-headings:uppercase prose-headings:tracking-tight prose-headings:font-extrabold prose-a:text-accent-400 prose-strong:text-cream-100 prose-hr:border-olive-700 max-w-none prose-lg">
+        <Content />
+      </div>
     </div>
 
-    {/* Optional 3D Model viewer */}
+    <!-- Interactive 3D Model Inspector -->
     {project.data.model3d && (
       <div class="scroll-reveal reveal-up" data-delay="100">
         <ModelViewer 
           modelPath={project.data.model3d.path} 
           caption={project.data.model3d.caption}
-          hint={lang === 'es' ? 'Arrastra para girar · Rueda para acercar' : 'Drag to rotate · Scroll to zoom'}
+          hint={lang === 'es' ? 'ARRASTRA PARA ROTAR · RUEDA PARA ZOOM' : 'DRAG TO ROTATE · SCROLL TO ZOOM'}
         />
       </div>
     )}
 
-    {/* Image Gallery */}
+    <!-- Brutalist Contact-Sheet Image Gallery -->
     {project.data.galleryImages && project.data.galleryImages.length > 0 && (
-      <div class="mt-24 pt-12 border-t border-olive-700/40 scroll-reveal reveal-up">
-        <h3 class="font-display text-3xl text-cream-100 font-semibold mb-8 tracking-tight">{t('project.gallery')}</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="gallery-grid">
-          {project.data.galleryImages.map((img, index) => (
-            <button 
-              type="button"
-              class="gallery-thumb rounded-xl overflow-hidden bg-forest-900 border border-olive-700/60 group relative aspect-[16/10] text-left cursor-pointer transition-all duration-300 hover:border-accent-400/80 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-accent-400 scroll-reveal reveal-up"
-              data-img-src={img}
-              data-img-index={index}
-              data-delay={index * 80}
-              aria-label={`View gallery image ${index + 1}`}
-            >
-              <img 
-                src={img} 
-                alt={`${project.data.title} screenshot ${index + 1}`} 
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out pointer-events-none" 
-                loading="lazy" 
-              />
-              <div class="absolute inset-0 bg-forest-950/20 group-hover:bg-transparent transition-colors pointer-events-none"></div>
-              <div class="absolute bottom-3 right-3 p-2 rounded-lg bg-forest-950/85 border border-olive-700/60 text-accent-400 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                </svg>
-              </div>
-            </button>
-          ))}
+      <div class="mt-28 pt-12 border-t border-olive-700 scroll-reveal reveal-up">
+        <div class="flex items-baseline justify-between mb-10">
+          <h3 class="font-display text-4xl sm:text-5xl text-cream-100 font-extrabold uppercase tracking-tighter">
+            {t('project.gallery')}<span class="text-accent-400">.</span>
+          </h3>
+          <span class="font-mono text-xs text-moss-500 uppercase tracking-[0.2em]">
+            [{project.data.galleryImages.length} CAPTURES]
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6" id="gallery-grid">
+          {project.data.galleryImages.map((img, index) => {
+            // Make every 3rd image span wider for editorial rhythm
+            const spanClass = index % 3 === 0 ? 'md:col-span-7' : index % 3 === 1 ? 'md:col-span-5' : 'md:col-span-12';
+            const frameCode = `FIG_${String(index + 1).padStart(2, '0')}`;
+            return (
+              <button 
+                type="button"
+                class={`gallery-thumb corner-brackets ${spanClass} bg-forest-900 border border-olive-700 group relative aspect-[16/9] text-left cursor-pointer transition-all duration-300 hover:border-accent-400 focus:outline-none overflow-hidden scroll-reveal reveal-up`}
+                data-img-src={img}
+                data-img-index={index}
+                data-delay={index * 60}
+                aria-label={`View gallery image ${index + 1}`}
+              >
+                <div class="absolute top-0 left-0 z-20 px-3 py-1 bg-forest-950/90 border-b border-r border-olive-700 font-mono text-[10px] tracking-[0.2em] text-moss-500 group-hover:text-accent-400 transition-colors">
+                  {frameCode}
+                </div>
+                <img 
+                  src={img} 
+                  alt={`${project.data.title} screenshot ${index + 1}`} 
+                  class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out pointer-events-none" 
+                  loading="lazy" 
+                />
+                <div class="absolute bottom-0 right-0 z-20 px-3 py-1.5 bg-forest-950/90 border-t border-l border-olive-700 text-accent-400 font-mono text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  [EXPAND +]
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
     )}
 
-    {/* Next project CTA card */}
+    <!-- Next Project Architectural Banner -->
     {nextProject && (
-      <div class="mt-28 pt-12 border-t border-olive-700/40 scroll-reveal reveal-up">
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-xs font-mono uppercase tracking-widest text-moss-500">{t('project.next')}</span>
-          <a href={homeUrl(lang, '#work')} class="text-xs font-mono uppercase tracking-widest text-moss-500 hover:text-cream-100 transition-colors">
-            {t('project.back')} ↑
+      <div class="mt-28 pt-12 border-t border-olive-700 scroll-reveal reveal-up">
+        <div class="flex items-center justify-between mb-6 font-mono text-xs uppercase tracking-[0.2em] text-moss-500">
+          <span>// {t('project.next')}</span>
+          <a href={homeUrl(lang, '#work')} class="hover:text-accent-400 transition-colors">
+            [{t('project.back')} ↑]
           </a>
         </div>
         <a 
           href={projectUrl(lang, nextSlug)} 
-          class="group block p-8 rounded-2xl bg-forest-900 border border-olive-700/60 hover:border-accent-400/80 transition-all duration-300 hover:shadow-2xl relative overflow-hidden"
+          class="corner-brackets group block p-8 md:p-12 bg-forest-900 border border-olive-700 hover:border-accent-400 transition-all duration-300 relative overflow-hidden"
         >
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
             <div>
-              <div class="flex items-center gap-2 mb-2">
-                <span class="text-xs font-mono text-moss-500 uppercase">{nextProject.data.year}</span>
-                <span class="w-1 h-1 rounded-full bg-olive-700"></span>
-                <span class="text-xs font-mono text-moss-500 uppercase">{nextProject.data.platform}</span>
+              <div class="flex items-center gap-3 mb-3 font-mono text-xs uppercase tracking-[0.2em] text-moss-500">
+                <span class="text-accent-400 font-bold">[{nextProject.data.year}]</span>
+                <span>//</span>
+                <span>{nextProject.data.platform}</span>
               </div>
-              <h4 class="text-3xl sm:text-4xl font-display text-cream-100 group-hover:text-accent-400 transition-colors font-semibold tracking-tight">
+              <h4 class="text-4xl sm:text-6xl font-display text-cream-100 group-hover:text-accent-400 transition-colors font-extrabold uppercase tracking-tighter leading-none">
                 {nextProject.data.title}
               </h4>
             </div>
             
-            <div class="flex items-center text-accent-400 font-sans text-sm font-semibold group-hover:translate-x-2 transition-transform shrink-0">
-              <span class="mr-2">{t('work.view')}</span>
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <div class="flex items-center gap-3 px-6 py-4 bg-forest-950 border border-olive-700 group-hover:bg-accent-400 group-hover:border-accent-400 group-hover:text-forest-950 text-cream-100 font-mono text-xs uppercase tracking-[0.2em] font-bold transition-all shrink-0">
+              <span>{t('work.view')}</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </div>
@@ -189,7 +216,7 @@ const { Content } = await render(project);
 
   </article>
 
-  {/* Accessible Lightbox Modal with Prev/Next Navigation */}
+  <!-- Industrial Lightbox Modal -->
   <div 
     id="lightbox-modal" 
     class="fixed inset-0 z-[100] bg-forest-950/95 backdrop-blur-xl hidden items-center justify-center p-4 sm:p-10 select-none" 
@@ -197,52 +224,42 @@ const { Content } = await render(project);
     aria-modal="true"
     aria-label="Image Lightbox"
   >
-    <!-- Top toolbar: Counter & Close button -->
-    <div class="absolute top-6 left-6 right-6 flex items-center justify-between z-10">
-      <span id="lightbox-counter" class="font-mono text-xs text-moss-500 tracking-widest bg-forest-900/80 px-3 py-1.5 rounded-lg border border-olive-700/60">
-        1 / 1
+    <div class="absolute top-6 left-6 right-6 flex items-center justify-between z-10 font-mono">
+      <span id="lightbox-counter" class="text-xs text-accent-400 tracking-[0.2em] bg-forest-900 px-4 py-2 border border-olive-700">
+        01 / 01
       </span>
       <button 
         id="lightbox-close" 
-        class="p-3 text-cream-200 hover:text-accent-400 rounded-full bg-forest-900/80 border border-olive-700/60 hover:border-accent-400 transition-all cursor-pointer" 
+        class="px-4 py-2 text-xs uppercase tracking-[0.2em] text-cream-100 hover:bg-accent-400 hover:text-forest-950 bg-forest-900 border border-olive-700 transition-all cursor-pointer font-bold" 
         aria-label="Close image modal"
       >
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
+        [ESC / CLOSE ✕]
       </button>
     </div>
 
-    <!-- Navigation arrow: Previous -->
     <button 
       id="lightbox-prev" 
-      class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 p-3 text-cream-200 hover:text-accent-400 rounded-full bg-forest-900/80 border border-olive-700/60 hover:border-accent-400 transition-all cursor-pointer z-10"
+      class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 p-4 text-cream-100 hover:bg-accent-400 hover:text-forest-950 bg-forest-900 border border-olive-700 transition-all cursor-pointer z-10 font-mono font-bold"
       aria-label="Previous image"
     >
-      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <path d="M15 19l-7-7 7-7"/>
-      </svg>
+      ←
     </button>
 
-    <!-- Center enlarged image view -->
     <div class="relative max-w-6xl max-h-[85vh] w-full h-full flex items-center justify-center p-2">
       <img 
         id="lightbox-img" 
         src="" 
         alt="Enlarged view" 
-        class="max-w-full max-h-[82vh] object-contain rounded-2xl shadow-2xl border border-olive-700/50 transition-transform duration-300" 
+        class="max-w-full max-h-[82vh] object-contain border border-olive-700 shadow-2xl" 
       />
     </div>
 
-    <!-- Navigation arrow: Next -->
     <button 
       id="lightbox-next" 
-      class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 p-3 text-cream-200 hover:text-accent-400 rounded-full bg-forest-900/80 border border-olive-700/60 hover:border-accent-400 transition-all cursor-pointer z-10"
+      class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 p-4 text-cream-100 hover:bg-accent-400 hover:text-forest-950 bg-forest-900 border border-olive-700 transition-all cursor-pointer z-10 font-mono font-bold"
       aria-label="Next image"
     >
-      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <path d="M9 5l7 7-7 7"/>
-      </svg>
+      →
     </button>
   </div>
 </BaseLayout>
@@ -269,7 +286,7 @@ const { Content } = await render(project);
 
       modalImg!.src = images[currentIndex];
       if (counter) {
-        counter.textContent = `${currentIndex + 1} / ${images.length}`;
+        counter.textContent = `FIG_${String(currentIndex + 1).padStart(2, '0')} // ${String(images.length).padStart(2, '0')}`;
       }
     }
 
@@ -310,7 +327,6 @@ const { Content } = await render(project);
     });
 
     modal.addEventListener('click', (e) => {
-      // Close if clicking outside the image and outside buttons
       if (e.target === modal || (e.target as HTMLElement).tagName === 'DIV') {
         closeModal();
       }

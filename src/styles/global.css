@@ -2,17 +2,17 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-forest-950: #121712;
-  --color-forest-900: #1A2219;
-  --color-olive-700: #3A4630;
-  --color-moss-500: #7A8659;
-  --color-cream-100: #F1EBDB;
-  --color-cream-300: #D9CFB5;
-  --color-accent-400: #FB923C; /* Warm terracotta/orange, a softer modern accent */
-  --color-rust-500: #A85A35;
+  --color-forest-950: #0A0B0A;
+  --color-forest-900: #111311;
+  --color-olive-700: #282C26;
+  --color-moss-500: #7B8275;
+  --color-cream-100: #F4F0EA;
+  --color-cream-300: #B8B2A6;
+  --color-accent-400: #FF5500; /* International Signal Orange / Industrial Engine Accent */
+  --color-rust-500: #CC3D00;
 
-  --font-display: 'Outfit', sans-serif;
-  --font-sans: 'Manrope', sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -22,31 +22,70 @@
     background-color: var(--color-forest-950);
     color: var(--color-cream-100);
     scroll-behavior: smooth;
+    selection-background-color: var(--color-accent-400);
+    selection-color: var(--color-forest-950);
   }
   
-  body {
-    @apply antialiased;
+  ::selection {
+    background-color: var(--color-accent-400);
+    color: #0A0B0A;
   }
+
+  body {
+    @apply antialiased overflow-x-hidden;
+    background-image: 
+      linear-gradient(to right, rgba(244, 240, 234, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(244, 240, 234, 0.03) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+}
+
+/* Corner Crosshair Reticles for Brutalist Viewport Architecture */
+.corner-brackets {
+  position: relative;
+}
+.corner-brackets::before,
+.corner-brackets::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--color-accent-400);
+  pointer-events: none;
+  z-index: 20;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.corner-brackets::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--color-accent-400);
+  border-left: 2px solid var(--color-accent-400);
+}
+.corner-brackets::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--color-accent-400);
+  border-right: 2px solid var(--color-accent-400);
 }
 
 /* Scroll-driven Assembly Motion */
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(45px) scale(0.97);
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(36px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
 .scroll-reveal.reveal-left {
-  transform: translateX(-50px) translateY(25px) scale(0.97);
+  transform: translateX(-40px) translateY(15px);
 }
 
 .scroll-reveal.reveal-right {
-  transform: translateX(50px) translateY(25px) scale(0.97);
+  transform: translateX(40px) translateY(15px);
 }
 
 .scroll-reveal.reveal-up {
-  transform: translateY(55px) scale(0.96);
+  transform: translateY(45px);
 }
 
 .scroll-reveal.is-revealed {

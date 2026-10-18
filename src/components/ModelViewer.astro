@@ -10,35 +10,43 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
 
 <div class="my-20">
   <div 
-    class="model-viewer-container relative w-full h-[460px] md:h-[580px] bg-gradient-to-b from-forest-900 to-forest-950 rounded-2xl border border-olive-700/60 overflow-hidden shadow-2xl select-none cursor-grab active:cursor-grabbing"
+    class="model-viewer-container corner-brackets relative w-full h-[500px] md:h-[620px] bg-forest-900 border border-olive-700 overflow-hidden select-none cursor-grab active:cursor-grabbing flex flex-col justify-between"
     data-model={modelPath}
     data-hint={hint}
     data-lenis-prevent="true"
   >
+    <!-- Top Viewport Header Bar -->
+    <div class="relative z-20 flex items-center justify-between px-4 py-2.5 bg-forest-950/90 border-b border-olive-700 font-mono text-[10px] uppercase tracking-[0.2em] text-moss-500 pointer-events-none">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2 h-2 bg-accent-400"></span>
+        <span class="text-cream-100 font-bold">WEBGL_VIEWPORT // THREE.JS</span>
+      </div>
+      <span>SHADING: ACES_FILMIC · 60FPS</span>
+    </div>
+
     <!-- Subtle radial spotlight backdrop behind 3D model -->
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(251,146,60,0.08),transparent_70%)] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,85,0,0.09),transparent_70%)] pointer-events-none"></div>
 
     <!-- Canvas will be injected here -->
-    <div class="canvas-mount w-full h-full relative z-10"></div>
+    <div class="canvas-mount absolute inset-0 w-full h-full z-10"></div>
 
     <!-- Loading progress spinner -->
-    <div class="model-loader absolute inset-0 z-20 flex flex-col items-center justify-center bg-forest-950/80 backdrop-blur-sm gap-3 transition-opacity duration-500">
-      <div class="w-8 h-8 rounded-full border-2 border-olive-700 border-t-accent-400 animate-spin"></div>
-      <span class="font-mono text-xs text-moss-500 uppercase tracking-widest load-text">Cargando modelo 3D...</span>
+    <div class="model-loader absolute inset-0 z-30 flex flex-col items-center justify-center bg-forest-950/90 gap-3 transition-opacity duration-500">
+      <div class="w-8 h-8 border-2 border-olive-700 border-t-accent-400 animate-spin"></div>
+      <span class="font-mono text-xs text-accent-400 uppercase tracking-widest load-text">LOADING_MESH...</span>
     </div>
 
-    <!-- Floating interaction badge -->
-    <div class="interaction-hint absolute bottom-4 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-forest-950/85 border border-olive-700/60 backdrop-blur-md text-xs font-mono text-cream-200 pointer-events-none tracking-wider shadow-lg flex items-center gap-2 transition-opacity duration-500">
-      <span class="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse"></span>
-      <span>{hint}</span>
+    <!-- Bottom Telemetry & Interaction Bar -->
+    <div class="relative z-20 mt-auto flex items-center justify-between px-4 py-2.5 bg-forest-950/90 border-t border-olive-700 font-mono text-[10px] uppercase tracking-[0.2em] pointer-events-none">
+      <div class="interaction-hint flex items-center gap-2 text-cream-100 transition-opacity duration-500">
+        <span class="text-accent-400">[INPUT]</span>
+        <span>{hint}</span>
+      </div>
+      {caption && (
+        <span class="text-moss-500 hidden sm:inline">// {caption}</span>
+      )}
     </div>
   </div>
-
-  {caption && (
-    <p class="text-center font-mono text-xs text-moss-500 mt-4 tracking-wide">
-      ✦ {caption}
-    </p>
-  )}
 </div>
 
 <script>
@@ -61,7 +69,6 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
       const loadText = container.querySelector<HTMLElement>('.load-text');
       if (!mount) return;
 
-      // Clean existing children
       mount.innerHTML = '';
 
       const width = container.clientWidth;
@@ -81,21 +88,18 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
       camera.position.set(0, 0, 1.15);
       const initialCameraPosition = camera.position.clone();
 
-      // 3. Studio Illumination (Dramatic Key + Terracotta Rim + Atmospheric Ambient)
+      // 3. Studio Illumination
       const keyLight = new THREE.DirectionalLight(0xfff6ea, 2.5);
       keyLight.position.set(4, 5, 4);
       scene.add(keyLight);
 
-      // Fill / ambient depth
       const fillLight = new THREE.HemisphereLight(0x7dd3fc, 0x1e293b, 2.2);
       scene.add(fillLight);
 
-      // Golden / Terracotta Rim back-light for edge highlights
-      const rimLight = new THREE.DirectionalLight(0xfb923c, 8.5);
+      const rimLight = new THREE.DirectionalLight(0xff5500, 8.5);
       rimLight.position.set(-5, 4, -5);
       scene.add(rimLight);
 
-      // Subtle warm ground bounce
       const groundBounce = new THREE.DirectionalLight(0xa3e635, 1.2);
       groundBounce.position.set(0, -4, 2);
       scene.add(groundBounce);
@@ -111,13 +115,11 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
       const EASE = 0.06;
       const EPS = 0.001;
 
-      // Zoom limits
       const minZoom = 0.65;
       const maxZoom = 1.7;
 
-      // Rotation limits (Cannot see underneath bottom part)
-      const MAX_ROT_X_UP = 1.35;    // Looking from slightly above
-      const MAX_ROT_X_DOWN = -0.05; // CLAMPED: strictly prevents camera looking up from below!
+      const MAX_ROT_X_UP = 1.35;
+      const MAX_ROT_X_DOWN = -0.05;
 
       const loader = new GLTFLoader();
       loader.load(
@@ -125,18 +127,15 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
         (gltf) => {
           model = gltf.scene;
 
-          // Compute bounding box and center the model
           const box = new THREE.Box3().setFromObject(model);
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
 
-          // Normalize scale so it fits nicely
           const targetScale = 0.55 / (maxDim || 1);
           model.scale.setScalar(targetScale);
           model.position.sub(center.multiplyScalar(targetScale));
 
-          // Set initial pleasing angle
           model.rotation.copy(initialRotation);
           scene.add(model);
 
@@ -149,12 +148,12 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
         },
         (xhr) => {
           if (xhr.total > 0 && loadText) {
-            loadText.innerText = `${Math.round((xhr.loaded / xhr.total) * 100)}%`;
+            loadText.innerText = `LOADING_MESH [${Math.round((xhr.loaded / xhr.total) * 100)}%]`;
           }
         },
         (err) => {
           console.error('Error loading 3D model:', err);
-          if (loadText) loadText.innerText = 'Error loading 3D model';
+          if (loadText) loadText.innerText = 'ERR_MESH_LOAD';
         }
       );
 
@@ -166,7 +165,7 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
 
       function hideHint() {
         if (hintEl) {
-          hintEl.style.opacity = '0';
+          hintEl.style.opacity = '0.4';
         }
       }
 
@@ -195,7 +194,6 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
           model.rotation.y += deltaX * ROT_SPEED;
           model.rotation.x += deltaY * ROT_SPEED;
 
-          // Clamp vertical pitch so user can NEVER look up from underneath
           if (model.rotation.x > MAX_ROT_X_UP) model.rotation.x = MAX_ROT_X_UP;
           if (model.rotation.x < MAX_ROT_X_DOWN) model.rotation.x = MAX_ROT_X_DOWN;
 
@@ -211,12 +209,10 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
         }
       }
 
-      // Mouse events
       container.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY));
       window.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
       window.addEventListener('mouseup', onPointerUp);
 
-      // Touch events
       container.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
@@ -231,7 +227,6 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
 
       window.addEventListener('touchend', onPointerUp);
 
-      // Wheel Zoom - Freeze page scroll completely
       container.addEventListener('wheel', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -245,7 +240,6 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
         resetIdleTimer();
       }, { passive: false, capture: true });
 
-      // Resize
       const resizeObserver = new ResizeObserver(() => {
         const w = container.clientWidth;
         const h = container.clientHeight;
@@ -255,14 +249,12 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
       });
       resizeObserver.observe(container);
 
-      // 6. Animation Loop (Smooth Idle Reset -> Auto Rotate)
       let reqId: number;
       function animate() {
         reqId = requestAnimationFrame(animate);
 
         if (model) {
           if (restoring) {
-            // Lerp back smoothly to initial rotation & camera zoom
             model.rotation.x += (initialRotation.x - model.rotation.x) * EASE;
             model.rotation.y += (initialRotation.y - model.rotation.y) * EASE;
             model.rotation.z += (initialRotation.z - model.rotation.z) * EASE;
@@ -277,7 +269,7 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
               model.rotation.copy(initialRotation);
               camera.position.copy(initialCameraPosition);
               restoring = false;
-              autoRotate = true; // Seamlessly start idle rotation again!
+              autoRotate = true;
             }
           } else if (autoRotate) {
             model.rotation.y += AUTO_ROTATE_SPEED;
@@ -288,7 +280,6 @@ const { modelPath, caption, hint = "Arrastra para girar · Rueda para acercar" }
       }
       animate();
 
-      // Cleanup on page leave / swap
       document.addEventListener('astro:before-swap', () => {
         cancelAnimationFrame(reqId);
         resizeObserver.disconnect();

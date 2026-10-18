@@ -7,7 +7,7 @@ role: "Lead Developer"
 duration: "8 months"
 teamSize: "3 people"
 featured: true
-coverImage: "/Portfolio/images/FondoLargoEchoes.jpg"
+coverImage: "/Portfolio/images/EchoesGalery1.jpg"
 previewVideo: "/Portfolio/images/EchoesGif.mp4"
 youtubeId: "qE11cv0BZyQ"
 award: "Best Student Game"

@@ -1,19 +1,26 @@
 ---
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import { homeUrl } from '../i18n/paths';
+import { getLangFromUrl } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
 const year = new Date().getFullYear();
 ---
 
-<footer class="py-12 px-6 md:px-12 mt-20 border-t border-olive-700/30 text-cream-300 font-sans text-sm flex flex-col md:flex-row justify-between items-center gap-4">
-  <div>
-    &copy; {year} Sebastián Escobar.
-  </div>
-  
-  <div class="flex gap-6 uppercase tracking-widest text-xs">
-    <a href="https://linkedin.com/in/sebastian-escobar-mejía" target="_blank" rel="noopener noreferrer" class="hover:text-accent-400 transition-colors">LinkedIn</a>
-    <a href="https://github.com/SebastianEsco" target="_blank" rel="noopener noreferrer" class="hover:text-accent-400 transition-colors">GitHub</a>
+<footer class="border-t border-olive-700 bg-forest-950 text-cream-300 font-mono text-xs uppercase tracking-[0.2em]">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-12 py-10 flex flex-col sm:flex-row justify-between items-center gap-6">
+    <div class="flex items-center gap-3">
+      <span class="w-2 h-2 bg-accent-400 inline-block"></span>
+      <span class="text-cream-100 font-bold">&copy; {year} SEBASTIÁN ESCOBAR.</span>
+    </div>
+    
+    <div class="flex items-center gap-8">
+      <a href="https://linkedin.com/in/sebastian-escobar-mejía" target="_blank" rel="noopener noreferrer" class="hover:text-accent-400 transition-colors flex items-center gap-1.5">
+        <span>LINKEDIN</span>
+        <span class="text-accent-400">↗</span>
+      </a>
+      <a href="https://github.com/SebastianEsco" target="_blank" rel="noopener noreferrer" class="hover:text-accent-400 transition-colors flex items-center gap-1.5">
+        <span>GITHUB</span>
+        <span class="text-accent-400">↗</span>
+      </a>
+    </div>
   </div>
 </footer>

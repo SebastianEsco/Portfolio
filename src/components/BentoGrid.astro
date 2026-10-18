@@ -11,7 +11,7 @@ const allProjects = await getCollection('projects', ({ id }) => {
   return id.startsWith(`${lang}/`);
 });
 
-// Explicitly place Echoes first so it occupies the primary large bento card (col-span-8, row-span-2)
+// Explicitly place Echoes first so it occupies the primary large feature viewport
 const projects = allProjects.sort((a, b) => {
   const isEchoesA = a.id.includes('echoes');
   const isEchoesB = b.id.includes('echoes');
@@ -21,47 +21,82 @@ const projects = allProjects.sort((a, b) => {
 }).slice(0, 4);
 ---
 
-<section id="work" class="py-24 px-6 md:px-12 max-w-7xl mx-auto">
-  <div class="flex items-baseline justify-between mb-12 scroll-reveal reveal-up">
-    <div>
-      <h2 class="font-mono text-moss-500 uppercase tracking-widest text-xs md:text-sm mb-3">{t('work.label')}</h2>
-      <h3 class="font-display text-4xl md:text-5xl text-cream-100 font-semibold tracking-tight">{t('work.title')}</h3>
+<section id="work" class="py-28 md:py-36 px-6 md:px-12 max-w-[1440px] mx-auto border-b border-olive-700">
+  
+  <!-- Top Architectural Section Bar -->
+  <div class="flex items-center justify-between border-b border-olive-700 pb-4 mb-12 font-mono text-xs uppercase tracking-[0.2em] text-moss-500 scroll-reveal reveal-up">
+    <div class="flex items-center gap-3">
+      <span class="text-accent-400 font-bold">01 //</span>
+      <span class="text-cream-100">{t('work.label')}</span>
     </div>
+    <span>ARCHIVE_INDEX [01—04]</span>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8 auto-rows-[340px] md:auto-rows-[380px] lg:auto-rows-[320px]">
+  <!-- Editorial Section Headline -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 scroll-reveal reveal-up">
+    <h3 class="font-display text-5xl sm:text-6xl md:text-7xl text-cream-100 font-extrabold uppercase tracking-tighter leading-[0.9]">
+      {t('work.title')}<span class="text-accent-400">.</span>
+    </h3>
+    <p class="font-mono text-xs uppercase tracking-widest text-moss-500 max-w-xs">
+      {lang === 'es' ? '// PASA EL CURSOR PARA PREVISUALIZAR EL MOTOR EN TIEMPO REAL' : '// HOVER VIEWPORTS FOR REAL-TIME ENGINE CAPTURE'}
+    </p>
+  </div>
+
+  <!-- Brutalist Architectural Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8 auto-rows-[380px] md:auto-rows-[420px] lg:auto-rows-[360px]">
     {projects.map((project, index) => {
-      let cardClasses = "bento-card group relative rounded-2xl overflow-hidden bg-forest-900 border border-olive-700/60 block transition-all duration-500 hover:border-accent-400/60 hover:shadow-2xl hover:shadow-black/60 scroll-reveal";
+      let cardClasses = "bento-card corner-brackets group relative bg-forest-900 border border-olive-700 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:border-accent-400 scroll-reveal";
       let delay = 0;
 
       if (index === 0) {
-        // Echoes: Massive primary feature card sliding in from left
-        cardClasses += " lg:col-span-8 lg:row-span-2 min-h-[460px] lg:min-h-full reveal-left";
+        // Echoes: Massive primary feature viewport
+        cardClasses += " lg:col-span-8 lg:row-span-2 min-h-[480px] lg:min-h-full reveal-left";
         delay = 0;
       } else if (index === 1) {
-        // Kapsula: Top right sliding in from right
-        cardClasses += " lg:col-span-4 lg:row-span-1 min-h-[300px] reveal-right";
-        delay = 150;
+        // Second project: Top right
+        cardClasses += " lg:col-span-4 lg:row-span-1 min-h-[340px] reveal-right";
+        delay = 120;
       } else if (index === 2) {
-        // Nuclear: Bottom right sliding in from right
-        cardClasses += " lg:col-span-4 lg:row-span-1 min-h-[300px] reveal-right";
-        delay = 300;
+        // Third project: Bottom right
+        cardClasses += " lg:col-span-4 lg:row-span-1 min-h-[340px] reveal-right";
+        delay = 240;
       } else {
-        // Balcones: Panoramic card sliding up from bottom
-        cardClasses += " md:col-span-2 lg:col-span-12 lg:row-span-1 min-h-[280px] reveal-up";
-        delay = 200;
+        // Fourth project: Full-width panoramic strip
+        cardClasses += " md:col-span-2 lg:col-span-12 lg:row-span-1 min-h-[340px] reveal-up";
+        delay = 180;
       }
 
       const slug = project.id.replace(`${lang}/`, '').replace('.md', '');
+      const indexNumber = String(index + 1).padStart(2, '0');
 
       return (
         <a href={projectUrl(lang, slug)} class={cardClasses} data-slug={slug} data-delay={delay}>
-          {/* Visual media container */}
-          <div class="absolute inset-0 z-0 overflow-hidden">
+          
+          {/* Top Technical Spec Header Bar */}
+          <div class="relative z-20 flex items-center justify-between px-4 py-2.5 bg-forest-950/90 border-b border-olive-700 font-mono text-[10px] uppercase tracking-[0.18em]">
+            <div class="flex items-center gap-3">
+              <span class="text-accent-400 font-bold">PRJ_{indexNumber}</span>
+              <span class="text-olive-700">|</span>
+              <span class="text-cream-100">{project.data.platform}</span>
+              <span class="text-olive-700 hidden sm:inline">|</span>
+              <span class="text-moss-500 hidden sm:inline">{project.data.engine}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              {project.data.award && (
+                <span class="px-2 py-0.5 bg-accent-400 text-forest-950 font-bold tracking-widest text-[9px]">
+                  ★ {project.data.award}
+                </span>
+              )}
+              <span class="text-moss-500">[{project.data.year}]</span>
+            </div>
+          </div>
+
+          {/* Visual Media Viewport */}
+          <div class="absolute inset-0 z-0 overflow-hidden bg-forest-950">
             <img 
               src={project.data.coverImage} 
               alt={project.data.title}
-              class="w-full h-full object-cover object-center opacity-70 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700 ease-out"
+              class="w-full h-full object-cover object-center opacity-80 group-hover:opacity-45 group-hover:scale-105 transition-all duration-700 ease-out"
               loading={index === 0 ? "eager" : "lazy"}
             />
             {project.data.previewVideo && (
@@ -71,54 +106,35 @@ const projects = allProjects.sort((a, b) => {
                 loop 
                 playsinline
                 preload="metadata"
-                class="bento-video absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                class="bento-video absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
               />
             )}
-            {/* Multi-stop gradient for readable text and studio feel */}
-            <div class="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/50 to-transparent pointer-events-none"></div>
-            <div class="absolute inset-0 bg-forest-950/20 mix-blend-multiply pointer-events-none"></div>
+            {/* High-Contrast Bottom Editorial Gradient */}
+            <div class="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/40 to-transparent pointer-events-none"></div>
           </div>
           
-          {/* Card Meta & Content */}
-          <div class="absolute inset-0 z-10 p-6 md:p-8 flex flex-col justify-between">
-            {/* Top row: tags and badge */}
-            <div class="flex items-center justify-between gap-3 flex-wrap">
-              <div class="flex items-center gap-2 flex-wrap">
-                {project.data.award && (
-                  <span class="px-2.5 py-1 bg-rust-500/90 text-cream-100 text-[10px] uppercase tracking-widest font-mono rounded-md shadow-sm backdrop-blur-sm border border-rust-500">
-                    ★ {project.data.award}
-                  </span>
-                )}
-                <span class="font-mono text-moss-500 uppercase tracking-widest text-xs bg-forest-950/60 px-2.5 py-1 rounded-md border border-olive-700/40 backdrop-blur-sm">
-                  {project.data.year}
-                </span>
-                <span class="font-mono text-moss-500 uppercase tracking-widest text-xs bg-forest-950/60 px-2.5 py-1 rounded-md border border-olive-700/40 backdrop-blur-sm">
-                  {project.data.platform}
-                </span>
-              </div>
-
-              {/* Engine tag */}
-              <span class="font-mono text-cream-300/70 text-xs tracking-wider hidden sm:inline-block">
-                {project.data.engine}
-              </span>
-            </div>
-            
-            {/* Bottom row: title and CTA */}
+          {/* Bottom Title & Action Bar */}
+          <div class="relative z-20 mt-auto p-6 md:p-8 flex items-end justify-between gap-4 border-t border-olive-700/60 bg-gradient-to-t from-forest-950/95 via-forest-950/75 to-transparent">
             <div>
-              <h4 class={`font-display text-cream-100 font-medium tracking-tight mb-2 group-hover:text-accent-400 transition-colors ${
-                index === 0 ? 'text-3xl md:text-5xl' : 'text-2xl md:text-3xl'
+              <div class="font-mono text-[10px] text-accent-400 uppercase tracking-[0.25em] mb-1">
+                {project.data.role}
+              </div>
+              <h4 class={`font-display text-cream-100 font-extrabold uppercase tracking-tighter leading-none group-hover:text-accent-400 transition-colors ${
+                index === 0 ? 'text-3xl sm:text-5xl md:text-6xl' : 'text-2xl sm:text-3xl md:text-4xl'
               }`}>
                 {project.data.title}
               </h4>
-              
-              <div class="flex items-center text-cream-300 font-sans text-sm font-medium pt-2 group-hover:translate-x-1 transition-transform duration-300">
-                <span class="text-accent-400 group-hover:underline underline-offset-4 mr-2">{t('work.view')}</span>
-                <svg class="w-4 h-4 text-accent-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </div>
+            </div>
+            
+            {/* Industrial Square Launch Button */}
+            <div class="shrink-0 flex items-center gap-2 px-4 py-2.5 bg-forest-950 border border-olive-700 group-hover:bg-accent-400 group-hover:border-accent-400 group-hover:text-forest-950 text-cream-100 font-mono text-[11px] uppercase tracking-widest font-bold transition-all duration-300">
+              <span class="hidden sm:inline">{t('work.view')}</span>
+              <svg class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M7 17L17 7M17 7H7M17 7V17"/>
+              </svg>
             </div>
           </div>
+
         </a>
       );
     })}
@@ -126,7 +142,6 @@ const projects = allProjects.sort((a, b) => {
 </section>
 
 <script>
-  // Enhanced hover & viewport video playback for Bento cards (strictly silent)
   function initBentoVideos() {
     const cards = document.querySelectorAll<HTMLElement>('.bento-card');
 
@@ -134,12 +149,10 @@ const projects = allProjects.sort((a, b) => {
       const video = card.querySelector<HTMLVideoElement>('.bento-video');
       if (!video) return;
 
-      // Strictly mute video audio tracks
       video.muted = true;
       video.defaultMuted = true;
       video.volume = 0;
 
-      // Desktop hover
       card.addEventListener('mouseenter', () => {
         video.muted = true;
         video.volume = 0;
@@ -152,7 +165,6 @@ const projects = allProjects.sort((a, b) => {
       });
     });
 
-    // Mobile / IntersectionObserver: play video gently when card is centered in view on touch devices
     if ('IntersectionObserver' in window && window.matchMedia('(hover: none)').matches) {
       const observer = new IntersectionObserver(
         (entries) => {

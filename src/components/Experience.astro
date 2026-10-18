@@ -6,54 +6,92 @@ const t = useTranslations(lang);
 
 const experiences = [
   {
+    index: '01',
     role: lang === 'es' ? 'Desarrollador Junior' : 'Junior Developer',
     company: 'Waygroup',
-    date: lang === 'es' ? 'Junio 2024 — Presente' : 'June 2024 — Present',
+    date: lang === 'es' ? 'JUN 2024 — PRESENTE' : 'JUN 2024 — PRESENT',
+    tag: 'UNITY / XR / SIMULATORS',
     description: lang === 'es' 
-      ? 'Desarrollo de experiencias interactivas, herramientas XR y mantenimiento de proyectos.' 
-      : 'Development of interactive experiences, XR tools, and project maintenance.'
+      ? 'Desarrollo de experiencias interactivas, herramientas XR y mantenimiento de proyectos en producción.' 
+      : 'Development of interactive experiences, XR tools, and production project maintenance.'
   },
   {
+    index: '02',
     role: lang === 'es' ? 'Practicante de Desarrollo' : 'Development Intern',
     company: 'Waygroup',
-    date: lang === 'es' ? 'Enero 2024 — Junio 2024' : 'January 2024 — June 2024',
+    date: lang === 'es' ? 'ENE 2024 — JUN 2024' : 'JAN 2024 — JUN 2024',
+    tag: 'VR / AR / PROTOTYPING',
     description: lang === 'es'
-      ? 'Apoyo en el desarrollo de simuladores y aplicaciones de realidad virtual/aumentada.'
+      ? 'Apoyo en el desarrollo de simuladores y aplicaciones de realidad virtual y aumentada.'
       : 'Support in the development of simulators and virtual/augmented reality applications.'
   },
   {
+    index: '03',
     role: lang === 'es' ? 'Desarrollador Freelance' : 'Freelance Developer',
-    company: 'Independiente / Freelance',
+    company: lang === 'es' ? 'Independiente' : 'Independent',
     date: '2022 — 2024',
+    tag: 'GAME SYSTEMS / C#',
     description: lang === 'es'
-      ? 'Creación de prototipos, juegos y aplicaciones.'
-      : 'Creation of prototypes, games, and applications.'
+      ? 'Creación de prototipos jugables, sistemas interactivos y aplicaciones a medida.'
+      : 'Creation of playable prototypes, interactive systems, and custom applications.'
   }
 ];
 ---
 
-<section id="experience" class="py-24 px-6 md:px-12 max-w-3xl mx-auto border-t border-olive-700/30 mt-24">
-  <div class="mb-16 scroll-reveal reveal-up">
-    <h2 class="font-mono text-moss-500 uppercase tracking-widest text-sm mb-4">{t('experience.label')}</h2>
-    <h3 class="font-display text-4xl text-cream-100">{t('experience.title')}</h3>
+<section id="experience" class="py-28 md:py-36 px-6 md:px-12 max-w-[1440px] mx-auto border-b border-olive-700">
+  
+  <!-- Top Architectural Section Bar -->
+  <div class="flex items-center justify-between border-b border-olive-700 pb-4 mb-12 font-mono text-xs uppercase tracking-[0.2em] text-moss-500 scroll-reveal reveal-up">
+    <div class="flex items-center gap-3">
+      <span class="text-accent-400 font-bold">02 //</span>
+      <span class="text-cream-100">{t('experience.label')}</span>
+    </div>
+    <span>CAREER_LOG // CHRONOLOGICAL</span>
   </div>
 
-  <div class="space-y-16 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-olive-700 before:via-olive-700/50 before:to-transparent">
+  <!-- Editorial Section Headline -->
+  <div class="mb-16 scroll-reveal reveal-up">
+    <h3 class="font-display text-5xl sm:text-6xl md:text-7xl text-cream-100 font-extrabold uppercase tracking-tighter leading-[0.9]">
+      {t('experience.title')}<span class="text-accent-400">.</span>
+    </h3>
+  </div>
+
+  <!-- Brutalist Ledger Rows (Replaces generic AI vertical circle timeline) -->
+  <div class="border-t border-olive-700">
     {experiences.map((exp, i) => (
-      <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active scroll-reveal reveal-up" data-delay={i * 120}>
-        {/* Timeline dot */}
-        <div class="flex items-center justify-center w-5 h-5 rounded-full border-2 border-accent-400 bg-forest-950 absolute left-0 md:left-1/2 md:-translate-x-1/2 shadow shadow-accent-400/20"></div>
-        
-        {/* Card */}
-        <div class="ml-10 md:ml-0 md:w-[calc(50%-2rem)] md:group-even:text-right">
-          <div class="font-mono text-moss-500 text-sm mb-2">{exp.date}</div>
-          <h4 class="font-display text-2xl text-cream-100 mb-1">{exp.role}</h4>
-          <div class="font-sans text-cream-300 font-medium mb-4">{exp.company}</div>
-          <p class="font-sans text-cream-300/80 text-base leading-relaxed">
+      <div 
+        class="group grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 py-10 px-4 md:px-6 border-b border-olive-700 hover:bg-forest-900/90 transition-colors items-start scroll-reveal reveal-up" 
+        data-delay={i * 100}
+      >
+        {/* Col 1: Index & Date */}
+        <div class="lg:col-span-3 flex items-center lg:flex-col lg:items-start justify-between gap-2 font-mono">
+          <span class="text-xs text-accent-400 font-bold tracking-widest">[{exp.index}]</span>
+          <span class="text-xs text-moss-500 uppercase tracking-wider">{exp.date}</span>
+        </div>
+
+        {/* Col 2: Role & Company */}
+        <div class="lg:col-span-4">
+          <h4 class="font-display text-2xl sm:text-3xl text-cream-100 font-bold uppercase tracking-tight group-hover:text-accent-400 transition-colors">
+            {exp.role}
+          </h4>
+          <div class="font-mono text-xs uppercase tracking-[0.2em] text-cream-300 mt-1">
+            @ {exp.company}
+          </div>
+        </div>
+
+        {/* Col 3: Description & Tech Tag */}
+        <div class="lg:col-span-5 flex flex-col justify-between gap-4">
+          <p class="font-sans text-cream-300 text-base leading-relaxed">
             {exp.description}
           </p>
+          <div>
+            <span class="inline-block font-mono text-[10px] uppercase tracking-[0.2em] text-moss-500 border border-olive-700 px-2.5 py-1 bg-forest-950">
+              {exp.tag}
+            </span>
+          </div>
         </div>
       </div>
     ))}
   </div>
+
 </section>
